@@ -1,1597 +1,1303 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeScan — QR Decoder</title>
-    <link rel="icon" type="image/png" sizes="16x16"
-        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAgUlEQVR4nLVSMRKAIAxLPaY6+F5ewHsZ6KqT2CIq1jNTjzRtuJQAgHlZ4YBIJmJeVinxRPKcjsYbPrwVtPxkLHWET7wZoLf00OPrFzzbAYC8CeyYnlt+HhCA8dh4TqauA64Eww60sBeVfmv5oTuQEqsrXRsHb2xrfL8DkUxesUimDSyHQNuuSnvvAAAAAElFTkSuQmCC">
-    <link rel="icon" type="image/png" sizes="32x32"
-        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAsUlEQVR4nO2XOxKAIAxEjWMFhef1BJzXQlqtmIkjH4HAUvAqfztZEkBCC0Op/V46YO1J7pp6BvYZWRGBOcRHb68jKVDaBN+V6LfWAVJ6eAk+GXBwt7FR1erhGYAbCJagJO0l+vEy8GepxcjVE2obdsBLMA1MA3ADr31A+nertPE+CxrIDSDBWCXg1J4Hqg2U4DOaMi9qQGQShj5sxXiTsMVSi4E/D/BGsTdj9Ib8BtGePxvdRqshlJIkAAAAAElFTkSuQmCC">
-    <link rel="apple-touch-icon" sizes="180x180"
-        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAADQ0lEQVR4nO3dzVLiQBhA0UDNChc+7zyBz+ti2DqLKaf8A0kRQud6zhbF2N76jB0wu2khh8Pjy1LPxc9zPD7vlnieq55ExNzCNXHP/kQRs6a5ce/nfLCYWdvc5i6qX8iM4JJp/e2EFjOjuKTFs0GLmdF81+TJoMXMqM61+WXQYmZ0pxr9FLSY2YqvWp21bQejexe06czWfGx2f+oB2Iq37TrlIEXQpOynyekG2/fasAlNiqBJ2S11unH883uJpxnO4eHp3ofwjnU+z4QmRdCkCJoUQZMiaFIETcqvNb7IaFtfb5W2wayzCU2MoEkRNCmCJkXQpAiaFEGTImhSVrmwcolbbLyPfKHhXurrbEKTImhSBE2KoEkRNCmCJkXQpAiaFEGTImhSBE2KoEkRNCmCJkXQpAiaFEGTImhSBE2KoEkZ5k2yI73Rsqy+ziY0KYImRdCkCJoUQZMiaFIETYqgSVnlwkrp1mkjs84mNDGCJkXQpAiaFEGTImhSBE3K7nB4fLn3QcBSTGhSBE2KoEkRNCmCJkXQpAiaFEGTImhSBE2KoEkRNCmCJkXQpAiaFEGTImhSBE2KoEkRNCmCJkXQpAiaFEGTImhSBE2KoEkRNCmCJkXQpAiaFEGTImhSBE2KoElZ7F7f1ftMHx6e7n0I79xync99r7f++S61ziY0KYImRdCkCJoUQZMiaFIW27Y7Z7Str7eq240/lQlNiqBJETQpgiZF0KQImhRBkyJoUla5sHKJW1zgGPmCDrdhQpMiaFIETYqgSRE0KYImZZhtOy5zr63IrWyBmtCkCJoUQZMiaFIETYqgSbFttzH+++h5JjQpgiZF0KQImhRBkyJoUobZttvKq7kYmwlNiqBJETQpgiZF0KQImhRBkyJoUla5sOLWaazFhCZF0KQImhRBkyJoUgRNiqBJ2U3TNB0Ojy/3PhC41vH4vDOhSRE0Kftp+jeq730gcI3Xhk1oUgRNyv+gnXawVW/b3Z96ALbgY7NOOUj5FLQpzVZ81eqXE1rUjO5UoydPOUTNqM61efYcWtSM5rsmv/2jUNSM4pIWZ8XqVXncw5yhOmvbzrRmbXObuypQE5tbuGZwLjZxxc01lvrt/xf39JzxrwjeFQAAAABJRU5ErkJggg==">
-    <link rel="icon" type="image/png" sizes="192x192"
-        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAADj0lEQVR4nO3dO3LTABRAUdtDJYqslxWwXgrchoIJA8E/OYp+95w6UYzmXT8hBXM8TGwYXl6nPia8OZ9/HKc83ocPZuBZ0keDePqbDT5r8mwIo7/J4LNmY0M4jfliw8/ajZ3Rh2ox+GzRI9vg7gYw/GzVI7N7MwDDz9bdm+GrARh+9uLWLF8MwPCzN9dmetRdINib/wLw7s9eXZrt070vgD15P+MugUj7E4B3fyr+nnUbgLTT4eDdn563mbcBSBMAaV+mPNj557cpD7dKw9fvS7+Eq5z/8U6u/6kahpdXl0CkCYA0AZAmANIEQNqkt0FvWfPtw/f2eDvR+b/MBiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBttifBj/rMp4Bbehq6lNr5twFIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkLa6j0VZ40dnlNTOvw1AmgBIEwBpAiBNAKQJgDQBkCYA0gRA2mxPgj/zP17gPuf/MhuANAGQJgDSBECaAEgTAGnHYXh5XfpFwFJsANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkfZnyYOef36Y83CoNX78v/RKumuP83/rzL/3zn2EDkCYA0gRAmgBIEwBpAiBt0tugt6z59uF7hdu5/GYDkCYA0gRAmgBIEwBpAiBNAKQJgDQBkDbbk+BHfeZT2C09jWYeNgBpAiBNAKQJgDQBkCYA0gRA2uqeA/C8pZ9zLP3zn2EDkCYA0gRAmgBIEwBpAiDNbdAdWfrz+Zf++c+wAUgTAGkCIE0ApAmANAGQJgDSVvccYIu/Ust22QCkCYA0AZAmANIEQJoASBMAaQIgTQCkzfYkeI5/LQRj2QCkCYA0AZAmANIEQJoASDseDofDMLy8Lv1CYG7n84+jDUCaAEgTAGmnw+H3tdDSLwTm9DbzNgBpfwKwBaj4e9ZtANL+CcAWYO/ez/h/G0AE7NWl2XYJRNrFAGwB9ubaTF/dACJgL27N8s1LIBGwdfdm+O7fAUTAVj0yu6OG269NswVj3rRH3QWyDVi7sTP69EDbBqzJs2/OH35HFwJL+uhVyeSXNILgM019Gf4LqzCmLI4uke0AAAAASUVORK5CYII=">
-    <link rel="icon" type="image/png" sizes="512x512"
-        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAALZElEQVR4nO3dTVIb6RJAUeHQSBqwXlag9XqApryBw36YBqy/qq+q7jkLcCeKVuRVlrCfdgGHw/Pb6BkAWI/z+efT6Bmmtqkf0KIHYEpbCoNV/yAWPgAjrTkIVje4pQ/AEq0tBlYxrKUPwJqsIQYWPaDFD8CaLTkEFjeYpQ/AFi0tBhYzjMUPQMFSQuDH6AF2O8sfgI6l7LyhFbKUFwEARhh5DRjyH7b4AeD/RoTA7I8ALH8A+NuI3ThrAFj+APC5uXfkLCcHix8ALjfHI4HJLwCWPwBcZ47dOWkAWP4AcJupd+hkAWD5A8B9ptylkwSA5Q8AjzHVTn3olwwsfgCYziO/HPiwC4DlDwDTeuSuXcS/BQAAzOshAeDTPwDM41E79+4AsPwBYF6P2L13BYDlDwBj3LuDbw4Ayx8AxrpnF98UAJY/ACzDrTvZbwEAQNDVAeDTPwAsyy27+aoAsPwBYJmu3dEXB4DlDwDLds2u9h0AAAi6KAB8+geAdbh0Z7sAAEDQPwPAp38AWJdLdve3AWD5A8A6/WuHewQAAEFfBoBP/wCwbt/tchcAAAgSAAAQ9GkAOP8DwDZ8tdNdAAAg6D8B4NM/AGzLZ7vdBQAAggQAAAT9FQDO/wCwTR93vAsAAAQJAAAI+hMAzv8AsG3vd70LAAAECQAACBIAABD0tNtt5/n/+fVl9Ahs3OF4Gj0CX/D+Z2pbev+fzz+fXAAAIEgAAECQAACAIAEAAEECAACCfmzlNwAAgMscDs9vLgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABB+9EDLNnheBo9Anc6v76MHoGV8v5fP+//77kAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAEDQfvQA7Hbn15fRI8zucDyNHgEWwfufUVwAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABB+9EDsNsdjqfRIwCDeP8zigsAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAATtRw+wZOfXl9EjAIN4/7N1LgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABA0NPh8Pw2eggAYF4uAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACC9qMHeKTz68voEdi4w/E0egS+4P3/yxT/j3ptf9na+98FAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAjajx5gyQ7H0+gRuNP59WX0CACL5AIAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEH70QOw251fX0aPMLvD8TR6BIA0FwAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgaD96AIBHOBxPo0fYLK/tNrkAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACC9qMHAHiE8+vL6BEW4XA8PfzP9Nr+MsVrO5ILAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABC0Hz0Au93heBo9AgAxLgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAELQfPcCSnV9fRo8AAJNwAQCAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQ9ON8/vk0eggAYD7n888nFwAACBIAABAkAAAgSAAAQNDTbrfbHQ7Pb6MHAQDm8edLgH4TAAAafu98jwAAIEgAAECQAACAoD8B4HsAALBt73e9CwAABAkAAAj6KwA8BgCAbfq4410AACBIAABA0H8CwGMAANiWz3a7CwAABH0aAK4AALANX+10FwAACBIAABD0ZQB4DAAA6/bdLncBAICgbwPAFQAA1ulfO/yfFwARAADrcsnu9ggAAIIuCgBXAABYh0t3tgsAAARdHACuAACwbNfs6qsuACIAAJbp2h199SMAEQAAy3LLbvYdAAAIuikAXAEAYBlu3ck3XwBEAACMdc8uvusRgAgAgDHu3cF3fwdABADAvB6xex/yJUARAADzeNTO9VsAABD0sABwBQCAaT1y106ytA+H57cp/lwAKJriQ/YkjwBcAwDgMabaqZN9B0AEAMB9ptylk34JUAQAwG2m3qGT/xaACACA68yxO2ddzr4cCABfm/ND86x/D4BrAAB8bu4dOftfBCQCAOBvI3bj0GXskQAAZSM/FC/i07gQAKBkCdfwRfxbAEt4IQBgDkvZeYsY4j3XAAC2aCmL/7dFDfORGABgzZa29N9b7GDvCQEA1mTJi/+3xQ/4kRgAYInWsPTfW9WwH4kBAEZa29J/b7WDf0YQADClNS/8jzbzg3xHGABwjS0t+q/8D6THaCKRuUm6AAAAAElFTkSuQmCC">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="SafeScan">
-    <meta name="theme-color" content="#0a0a0f">
-    <link rel="apple-touch-icon"
-        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACQklEQVR42u3dQQqEMBREwayz8dreWo8gBGPS34K3nhnaWgxisPV+SMM1EwggASSABJAEkAASQAJIAkgACSABJAEkgASQAJIAEkACSAAJIAkgxQJq11ky+zxkIIAAAggggAACCCADAQQQQAABBBBAAL00UMDt1KWAovcBCCCAAAIIIIAAAshAAAEEEEAAAQQQQAYCCCCAAAIIIIAAAsg+AAFUHtCS53iCAO22D0AAAQQQQAABBBBABgIIIIAAAggggAAyEEAAAQQQQAABBBBA9gEIIIAAAggggACyD0AAAQQQQAABBBBABgIIIIAAcrDQwUKAADIQQAABBBBAAAEEEED2AQgggAACCCCAALIPQAABBBBAAAEEEEDTv8Nrv732GyD7AAQQQAABBBBAANkHIIAAAggggADSjwNIAAkgASSAJIAEkAASQBJAAkgACSAJIAEkgASQBJAAEkACSABJACkXkIOFs/eZ92kAAQQQQAABBBBAAAEEEEAAAQQQQAABtAOggNupAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAFfvx9Y/1AATQd9dgyXM8AAEEEEClAfkTDRBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAA5WCiAAAIIIIAAAggggFwDgAACCCCAAAIIIIAAAggggAACCCCAAKIEIICyAXntN0AACSCAAAIIIIAAAkgAAQQQQAABFN4NXSmRhXpwTMIAAAAASUVORK5CYII=">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SafeScan">
-    <meta name="theme-color" content="#0a0a0f">
-    <link rel="manifest"
-        href="data:application/json;base64,eyJuYW1lIjoiU2FmZVNjYW4iLCJzaG9ydF9uYW1lIjoiU2FmZVNjYW4iLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFNQUFBQURBQ0FJQUFBRGR2dnRRQUFBQ1FrbEVRVlI0MnUzZFFRcUVNQlJFd2F5ejhkcmVXbzhnQkdQUzM0SzNuaG5hV2d4aXNQVitTTU0xRXdnZ0FTU0FCSkFFa0FBU1FBSklBa2dBQ1NBQkpBRWtnQVNRQUpJQUVrQUNTQUFKSUFrZ3hRSnExMWt5K3p4a0lJQUFBZ2dnZ0FBQ0NDQURBUVFRUUFBQkJCQkFBTDAwVU1EdDFLV0FvdmNCQ0NDQUFBSUlJSUFBQXNoQUFBRUVFRUFBQVFRUVFBWUNDQ0NBQUFJSUlJQUFBc2crQUFGVUh0Q1M1M2lDQU8yMkQwQUFBUVFRUUFBQkJCQkFCZ0lJSUlBQUFnZ2dnQUF5RUVBQUFRUVFRQUFCQkJCQTlnRUlJSUFBQWdnZ2dBQ3lEMEFBQVFRUVFBQUJCQkJBQmdJSUlJQUFjckRRd1VLQUFESVFRQUFCQkJCQUFBRUVFRUQyQVFnZ2dBQUNDQ0NBQUxJUFFBQUJCQkJBQUFFRUVFRFR2OE5ydjczMkd5RDdBQVFRUUFBQkJCQkFBTmtISUlBQUFnZ2dnQURTandOSUFBa2dBU1NBSklBRWtBQVNRQkpBQWtnQUNTQUpJQUVrZ0FTUUJKQUFFa0FDU0FCSkFDa1hrSU9Gcy9lWjkya0FBUVFRUUFBQkJCQkFBQUVFRUVBQUFRUVFRQUFCdEFPZ2dOdXBBQUVFRUVBQUFRUVFRQUFCQkJCQUFBRUVFRUFBQVFRUVFBQUJCQkJBQUFFRUVFQUFGZnZ4OVkvMUFBVFFkOWRneVhNOEFBRUVFRUNsQWZrVERSQkFBQUVFRUVBQUFRUVFRQUFCQkJCQUFBRUVFRUFBQVFRUVFBQUJCQkJBQUFFRUVFQUFBUVFRUUFBQkJCQkFBQUVFRUVBQUFRUVFRQUE1V0NpQUFBSUlJSUFBQWdnZ2dGd0RnQUFDQ0NDQUFBSUlJSUFBQWdnZ2dBQUNDQ0NBQUtJRUlJQ3lBWG50TjBBQUNTQ0FBQUlJSUlBQUFrZ0FBUVFRUUFBQkZONE5YU21SaFhwd1RNSUFBQUFBU1VWT1JLNUNZSUk9Iiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3BuZyJ9LHsic3JjIjoiZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFNQUFBQURBQ0FJQUFBRGR2dnRRQUFBQ1FrbEVRVlI0MnUzZFFRcUVNQlJFd2F5ejhkcmVXbzhnQkdQUzM0SzNuaG5hV2d4aXNQVitTTU0xRXdnZ0FTU0FCSkFFa0FBU1FBSklBa2dBQ1NBQkpBRWtnQVNRQUpJQUVrQUNTQUFKSUFrZ3hRSnExMWt5K3p4a0lJQUFBZ2dnZ0FBQ0NDQURBUVFRUUFBQkJCQkFBTDAwVU1EdDFLV0FvdmNCQ0NDQUFBSUlJSUFBQXNoQUFBRUVFRUFBQVFRUVFBWUNDQ0NBQUFJSUlJQUFBc2crQUFGVUh0Q1M1M2lDQU8yMkQwQUFBUVFRUUFBQkJCQkFCZ0lJSUlBQUFnZ2dnQUF5RUVBQUFRUVFRQUFCQkJCQTlnRUlJSUFBQWdnZ2dBQ3lEMEFBQVFRUVFBQUJCQkJBQmdJSUlJQUFjckRRd1VLQUFESVFRQUFCQkJCQUFBRUVFRUQyQVFnZ2dBQUNDQ0NBQUxJUFFBQUJCQkJBQUFFRUVFRFR2OE5ydjczMkd5RDdBQVFRUUFBQkJCQkFBTmtISUlBQUFnZ2dnQURTandOSUFBa2dBU1NBSklBRWtBQVNRQkpBQWtnQUNTQUpJQUVrZ0FTUUJKQUFFa0FDU0FCSkFDa1hrSU9Gcy9lWjkya0FBUVFRUUFBQkJCQkFBQUVFRUVBQUFRUVFRQUFCdEFPZ2dOdXBBQUVFRUVBQUFRUVFRQUFCQkJCQUFBRUVFRUFBQVFRUVFBQUJCQkJBQUFFRUVFQUFGZnZ4OVkvMUFBVFFkOWRneVhNOEFBRUVFRUNsQWZrVERSQkFBQUVFRUVBQUFRUVFRQUFCQkJCQUFBRUVFRUFBQVFRUVFBQUJCQkJBQUFFRUVFQUFBUVFRUUFBQkJCQkFBQUVFRUVBQUFRUVFRQUE1V0NpQUFBSUlJSUFBQWdnZ2dGd0RnQUFDQ0NDQUFBSUlJSUFBQWdnZ2dBQUNDQ0NBQUtJRUlJQ3lBWG50TjBBQUNTQ0FBQUlJSUlBQUFrZ0FBUVFRUUFBQkZONE5YU21SaFhwd1RNSUFBQUFBU1VWT1JLNUNZSUk9Iiwic2l6ZXMiOiI1MTJ4NTEyIiwidHlwZSI6ImltYWdlL3BuZyJ9XSwidGhlbWVfY29sb3IiOiIjMGEwYTBmIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwYTBhMGYiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsInN0YXJ0X3VybCI6Ii4ifQ==">
-    <rect width='32' height='32' rx='6' fill='%230a0a0f' />
-    <rect x='4' y='4' width='10' height='10' rx='1.5' fill='none' stroke='%2300ff88' stroke-width='2' />
-    <rect x='6' y='6' width='6' height='6' rx='.5' fill='%2300ff88' />
-    <rect x='18' y='4' width='10' height='10' rx='1.5' fill='none' stroke='%2300ff88' stroke-width='2' />
-    <rect x='20' y='6' width='6' height='6' rx='.5' fill='%2300ff88' />
-    <rect x='4' y='18' width='10' height='10' rx='1.5' fill='none' stroke='%2300ff88' stroke-width='2' />
-    <rect x='6' y='20' width='6' height='6' rx='.5' fill='%2300ff88' />
-    <rect x='18' y='18' width='4' height='4' rx='.5' fill='%2300ff88' />
-    <rect x='24' y='18' width='4' height='4' rx='.5' fill='%2300ff88' />
-    <rect x='18' y='24' width='4' height='4' rx='.5' fill='%2300ff88' />
-    <rect x='24' y='24' width='4' height='4' rx='.5' fill='%2300ff88' /></svg>">
-    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap');
-
-        :root {
-            --bg: #0a0a0f;
-            --surface: #12121a;
-            --border: #1e1e2e;
-            --accent: #00ff88;
-            --accent2: #ff3c6e;
-            --warn: #ffba08;
-            --text: #e8e8f0;
-            --muted: #5a5a7a;
-            --card: #16161f;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Syne', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 24px 16px 48px;
-        }
-
-        /* Background grid */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 580px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 32px;
-            padding-top: 12px;
-        }
-
-        .badge {
-            display: inline-block;
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--accent);
-            border: 1px solid var(--accent);
-            padding: 4px 12px;
-            border-radius: 2px;
-            margin-bottom: 14px;
-            opacity: 0.8;
-        }
-
-        .logo-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .logo-name {
-            font-family: 'Space Mono', monospace;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--accent);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
-        h1 {
-            font-size: clamp(26px, 6vw, 40px);
-            font-weight: 400;
-            line-height: 1.05;
-            letter-spacing: -0.5px;
-        }
-
-        h1 span {
-            color: var(--accent);
-        }
-
-        .subtitle {
-            margin-top: 8px;
-            font-size: 13px;
-            color: var(--muted);
-            font-family: 'Space Mono', monospace;
-        }
-
-        /* Scanner card */
-        .scanner-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 16px;
-        }
-
-        .tab-bar {
-            display: flex;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .tab {
-            flex: 1;
-            padding: 14px;
-            text-align: center;
-            font-size: 12px;
-            font-family: 'Space Mono', monospace;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            color: var(--muted);
-            border: none;
-            background: none;
-            transition: all 0.2s;
-        }
-
-        .tab.active {
-            color: var(--accent);
-            background: rgba(0, 255, 136, 0.05);
-            border-bottom: 2px solid var(--accent);
-            margin-bottom: -1px;
-        }
-
-        .tab-content {
-            padding: 24px;
-        }
-
-        /* Camera view */
-        #camera-panel {
-            display: block;
-        }
-
-        #upload-panel {
-            display: none;
-        }
-
-        .video-wrap {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 16px;
-        }
-
-        #preview {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* QR corner brackets */
-        .qr-overlay {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-        }
-
-        .qr-frame {
-            width: 60%;
-            aspect-ratio: 1;
-            position: relative;
-        }
-
-        .qr-frame::before,
-        .qr-frame::after,
-        .qr-frame span::before,
-        .qr-frame span::after {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            border-color: var(--accent);
-            border-style: solid;
-            opacity: 0.9;
-        }
-
-        .qr-frame::before {
-            top: 0;
-            left: 0;
-            border-width: 2px 0 0 2px;
-        }
-
-        .qr-frame::after {
-            top: 0;
-            right: 0;
-            border-width: 2px 2px 0 0;
-        }
-
-        .qr-frame span::before {
-            bottom: 0;
-            left: 0;
-            border-width: 0 0 2px 2px;
-        }
-
-        .qr-frame span::after {
-            bottom: 0;
-            right: 0;
-            border-width: 0 2px 2px 0;
-        }
-
-        .scan-line {
-            position: absolute;
-            left: 5%;
-            right: 5%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            animation: scanLine 2s ease-in-out infinite;
-            box-shadow: 0 0 8px var(--accent);
-        }
-
-        @keyframes scanLine {
-
-            0%,
-            100% {
-                top: 10%;
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            90% {
-                opacity: 1;
-            }
-
-            50% {
-                top: 88%;
-            }
-        }
-
-        .no-camera-msg {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            color: var(--muted);
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .no-camera-msg .icon {
-            font-size: 36px;
-            margin-bottom: 4px;
-        }
-
-        /* Buttons */
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 700;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #000;
-        }
-
-        .btn-primary:hover {
-            background: #00e87a;
-            transform: translateY(-1px);
-        }
-
-        .btn-danger {
-            background: var(--accent2);
-            color: #fff;
-        }
-
-        .btn-danger:hover {
-            background: #ff2255;
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--muted);
-            border: 1px solid var(--border);
-        }
-
-        .btn-ghost:hover {
-            border-color: var(--muted);
-            color: var(--text);
-        }
-
-        /* Upload area */
-        .drop-zone {
-            border: 2px dashed var(--border);
-            border-radius: 8px;
-            padding: 48px 24px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 16px;
-        }
-
-        .drop-zone:hover,
-        .drop-zone.drag-over {
-            border-color: var(--accent);
-            background: rgba(0, 255, 136, 0.03);
-        }
-
-        .drop-zone .icon {
-            font-size: 40px;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .drop-zone p {
-            color: var(--muted);
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            line-height: 1.6;
-        }
-
-        .drop-zone strong {
-            color: var(--text);
-        }
-
-        #file-input {
-            display: none;
-        }
-
-        /* Result card */
-        #result-card {
-            display: none;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .result-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .result-type-badge {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            padding: 3px 10px;
-            border-radius: 100px;
-            font-weight: 700;
-        }
-
-        .type-url {
-            background: rgba(255, 186, 8, 0.15);
-            color: var(--warn);
-            border: 1px solid rgba(255, 186, 8, 0.3);
-        }
-
-        .type-text {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--accent);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-        }
-
-        .type-wifi {
-            background: rgba(100, 120, 255, 0.1);
-            color: #7c8fff;
-            border: 1px solid rgba(100, 120, 255, 0.3);
-        }
-
-        .type-phone {
-            background: rgba(100, 220, 255, 0.1);
-            color: #4dd8ff;
-            border: 1px solid rgba(100, 220, 255, 0.3);
-        }
-
-        .type-email {
-            background: rgba(200, 100, 255, 0.1);
-            color: #c880ff;
-            border: 1px solid rgba(200, 100, 255, 0.3);
-        }
-
-        .result-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--muted);
-        }
-
-        .result-body {
-            padding: 20px;
-        }
-
-        /* Warning banner */
-        .warning-banner {
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-            background: rgba(255, 186, 8, 0.08);
-            border: 1px solid rgba(255, 186, 8, 0.25);
-            border-radius: 8px;
-            padding: 14px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .warning-banner .warn-icon {
-            font-size: 18px;
-            flex-shrink: 0;
-            margin-top: 1px;
-        }
-
-        .warning-banner strong {
-            color: var(--warn);
-            display: block;
-            margin-bottom: 2px;
-        }
-
-        .warning-banner p {
-            color: #c89a00;
-            font-size: 12px;
-        }
-
-        /* Decoded content display */
-        .content-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
-            font-family: 'Space Mono', monospace;
-            font-size: 13px;
-            word-break: break-all;
-            line-height: 1.7;
-            color: var(--text);
-            white-space: pre-wrap;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        /* Parsed fields (WIFI, vCard etc) */
-        .parsed-fields {
-            margin-bottom: 16px;
-        }
-
-        .field-row {
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-        }
-
-        .field-row:last-child {
-            border-bottom: none;
-        }
-
-        .field-label {
-            color: var(--muted);
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            min-width: 80px;
-            padding-top: 1px;
-        }
-
-        .field-value {
-            color: var(--text);
-            word-break: break-all;
-            flex: 1;
-        }
-
-        /* Action row */
-        .action-row {
-            display: flex;
-            gap: 10px;
-        }
-
-        .action-row .btn {
-            flex: 1;
-        }
-
-        /* Scan again */
-        .scan-again {
-            margin-top: 12px;
-        }
-
-        /* Footer */
-        footer {
-            margin-top: 32px;
-            text-align: center;
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            color: var(--muted);
-            line-height: 1.8;
-        }
-
-        footer span {
-            color: var(--accent);
-        }
-
-        /* Scanning pulse indicator */
-        .status-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            color: var(--muted);
-        }
-
-        .pulse-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--muted);
-            flex-shrink: 0;
-        }
-
-        .pulse-dot.active {
-            background: var(--accent);
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);
-            }
-
-            50% {
-                opacity: 0.7;
-                box-shadow: 0 0 0 5px rgba(0, 255, 136, 0);
-            }
-        }
-
-        /* Copy toast */
-        .toast {
-            position: fixed;
-            bottom: 32px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--accent);
-            color: #000;
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 10px 24px;
-            border-radius: 100px;
-            opacity: 0;
-            transition: all 0.3s;
-            pointer-events: none;
-            z-index: 999;
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* Quick-copy bank cards */
-        .quick-card {
-            flex: 1;
-            min-width: 140px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 14px;
-            cursor: pointer;
-            transition: all 0.18s;
-            text-align: left;
-        }
-
-        .quick-card:hover {
-            border-color: var(--accent);
-            background: rgba(0, 255, 136, 0.05);
-            transform: translateY(-1px);
-        }
-
-        .quick-card .qc-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 5px;
-        }
-
-        .quick-card .qc-value {
-            font-family: 'Space Mono', monospace;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--accent);
-            word-break: break-all;
-        }
-
-        .quick-card .qc-hint {
-            font-size: 10px;
-            color: var(--muted);
-            margin-top: 4px;
-        }
-
-        /* ── Safety panel styles ── */
-        .domain-breakdown {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            line-height: 1.8;
-        }
-
-        .domain-breakdown .db-title {
-            font-size: 10px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 10px;
-        }
-
-        .domain-breakdown .db-row {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            padding: 3px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .domain-breakdown .db-row:last-child {
-            border-bottom: none;
-        }
-
-        .domain-breakdown .db-key {
-            color: var(--muted);
-            font-size: 10px;
-            min-width: 72px;
-            flex-shrink: 0;
-        }
-
-        .domain-breakdown .db-val {
-            color: var(--text);
-            word-break: break-all;
-        }
-
-        .db-val.suspicious {
-            color: var(--accent2);
-            font-weight: 700;
-        }
-
-        .db-val.safe {
-            color: var(--accent);
-        }
-
-        .db-val.warn {
-            color: var(--warn);
-        }
-
-        .rep-banner {
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-            border-radius: 8px;
-            padding: 14px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            line-height: 1.5;
-            border: 1px solid;
-        }
-
-        .rep-banner .rep-icon {
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .rep-banner strong {
-            display: block;
-            margin-bottom: 2px;
-            font-size: 13px;
-        }
-
-        .rep-banner p {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-
-        .rep-danger {
-            background: rgba(255, 60, 110, 0.12);
-            border-color: rgba(255, 60, 110, 0.4);
-            color: var(--accent2);
-        }
-
-        .rep-danger p {
-            color: #ff8aa8;
-        }
-
-        .rep-warn {
-            background: rgba(255, 186, 8, 0.10);
-            border-color: rgba(255, 186, 8, 0.4);
-            color: var(--warn);
-        }
-
-        .rep-warn p {
-            color: #d4a000;
-        }
-
-        .rep-safe {
-            background: rgba(0, 255, 136, 0.08);
-            border-color: rgba(0, 255, 136, 0.3);
-            color: var(--accent);
-        }
-
-        .rep-safe p {
-            color: #00cc70;
-        }
-
-        .rep-loading {
-            background: var(--surface);
-            border-color: var(--border);
-            color: var(--muted);
-        }
-
-        .rep-loading p {
-            color: var(--muted);
-        }
-
-        .crc-banner {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            padding: 12px 14px;
-            border-radius: 8px;
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            border: 1px solid;
-            margin-bottom: 12px;
-        }
-
-        .crc-ok {
-            background: rgba(0, 255, 136, 0.08);
-            border-color: rgba(0, 255, 136, 0.3);
-            color: var(--accent);
-        }
-
-        .crc-fail {
-            background: rgba(255, 60, 110, 0.12);
-            border-color: rgba(255, 60, 110, 0.4);
-            color: var(--accent2);
-        }
-
-        #url-safety-panel {
-            margin-bottom: 4px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeScan — QR Decoder</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230a0a0f'/><rect x='4' y='4' width='10' height='10' rx='2' fill='none' stroke='%2300ff88' stroke-width='2'/><rect x='6' y='6' width='6' height='6' rx='1' fill='%2300ff88'/><rect x='18' y='4' width='10' height='10' rx='2' fill='none' stroke='%2300ff88' stroke-width='2'/><rect x='20' y='6' width='6' height='6' rx='1' fill='%2300ff88'/><rect x='4' y='18' width='10' height='10' rx='2' fill='none' stroke='%2300ff88' stroke-width='2'/><rect x='6' y='20' width='6' height='6' rx='1' fill='%2300ff88'/><rect x='18' y='18' width='4' height='4' rx='1' fill='%2300ff88'/><rect x='24' y='18' width='4' height='4' rx='1' fill='%2300ff88'/><rect x='18' y='24' width='4' height='4' rx='1' fill='%2300ff88'/><rect x='24' y='24' width='4' height='4' rx='1' fill='%2300ff88'/></svg>">
+<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --accent: #00ff88;
+    --accent2: #ff3c6e;
+    --warn: #ffba08;
+    --text: #e8e8f0;
+    --muted: #5a5a7a;
+    --card: #16161f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 48px;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { position: relative; z-index: 1; width: 100%; max-width: 580px; }
+
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-top: 12px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+    opacity: 0.8;
+  }
+
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .logo-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: clamp(26px, 6vw, 40px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.5px;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* Scanner card */
+  .scanner-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .tab-bar {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 14px;
+    text-align: center;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--muted);
+    border: none;
+    background: none;
+    transition: all 0.2s;
+  }
+
+  .tab.active {
+    color: var(--accent);
+    background: rgba(0,255,136,0.05);
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: -1px;
+  }
+
+  .tab-content { padding: 24px; }
+
+  /* Camera view */
+  #camera-panel { display: block; }
+  #upload-panel { display: none; }
+
+  .video-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  #preview {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* QR corner brackets */
+  .qr-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+
+  .qr-frame {
+    width: 60%; aspect-ratio: 1;
+    position: relative;
+  }
+
+  .qr-frame::before, .qr-frame::after,
+  .qr-frame span::before, .qr-frame span::after {
+    content: '';
+    position: absolute;
+    width: 24px; height: 24px;
+    border-color: var(--accent);
+    border-style: solid;
+    opacity: 0.9;
+  }
+
+  .qr-frame::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
+  .qr-frame::after  { top: 0; right: 0; border-width: 2px 2px 0 0; }
+  .qr-frame span::before { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+  .qr-frame span::after  { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+  .scan-line {
+    position: absolute;
+    left: 5%; right: 5%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: scanLine 2s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  @keyframes scanLine {
+    0%, 100% { top: 10%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    50% { top: 88%; }
+  }
+
+  .no-camera-msg {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .no-camera-msg .icon { font-size: 36px; margin-bottom: 4px; }
+
+  /* Buttons */
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 700;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+  }
+  .btn-primary:hover { background: #00e87a; transform: translateY(-1px); }
+
+  .btn-danger {
+    background: var(--accent2);
+    color: #fff;
+  }
+  .btn-danger:hover { background: #ff2255; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+
+  /* Upload area */
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+  }
+
+  .drop-zone:hover, .drop-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(0,255,136,0.03);
+  }
+
+  .drop-zone .icon { font-size: 40px; margin-bottom: 12px; display: block; }
+  .drop-zone p { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 12px; line-height: 1.6; }
+  .drop-zone strong { color: var(--text); }
+
+  #file-input { display: none; }
+
+  /* Result card */
+  #result-card {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .result-type-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-weight: 700;
+  }
+
+  .type-url   { background: rgba(255,186,8,0.15); color: var(--warn); border: 1px solid rgba(255,186,8,0.3); }
+  .type-text  { background: rgba(0,255,136,0.1);  color: var(--accent); border: 1px solid rgba(0,255,136,0.2); }
+  .type-wifi  { background: rgba(100,120,255,0.1); color: #7c8fff; border: 1px solid rgba(100,120,255,0.3); }
+  .type-phone { background: rgba(100,220,255,0.1); color: #4dd8ff; border: 1px solid rgba(100,220,255,0.3); }
+  .type-email { background: rgba(200,100,255,0.1); color: #c880ff; border: 1px solid rgba(200,100,255,0.3); }
+
+  .result-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .result-body { padding: 20px; }
+
+  /* Warning banner */
+  .warning-banner {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: rgba(255,186,8,0.08);
+    border: 1px solid rgba(255,186,8,0.25);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .warning-banner .warn-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .warning-banner strong { color: var(--warn); display: block; margin-bottom: 2px; }
+  .warning-banner p { color: #c89a00; font-size: 12px; }
+
+  /* Decoded content display */
+  .content-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    word-break: break-all;
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre-wrap;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  /* Parsed fields (WIFI, vCard etc) */
+  .parsed-fields { margin-bottom: 16px; }
+
+  .field-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .field-row:last-child { border-bottom: none; }
+  .field-label { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 11px; min-width: 80px; padding-top: 1px; }
+  .field-value { color: var(--text); word-break: break-all; flex: 1; }
+
+  /* Action row */
+  .action-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .action-row .btn { flex: 1; }
+
+  /* Scan again */
+  .scan-again {
+    margin-top: 12px;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 32px;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  footer span { color: var(--accent); }
+
+  /* Scanning pulse indicator */
+  .status-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .pulse-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .pulse-dot.active {
+    background: var(--accent);
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,255,136,0.4); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 5px rgba(0,255,136,0); }
+  }
+
+  /* Copy toast */
+  .toast {
+    position: fixed;
+    bottom: 32px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--accent);
+    color: #000;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: 100px;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 999;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Quick-copy bank cards */
+  .quick-card {
+    flex: 1;
+    min-width: 140px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: left;
+  }
+
+  .quick-card:hover {
+    border-color: var(--accent);
+    background: rgba(0,255,136,0.05);
+    transform: translateY(-1px);
+  }
+
+  .quick-card .qc-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .quick-card .qc-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    word-break: break-all;
+  }
+
+  .quick-card .qc-hint {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ── Safety panel styles ── */
+  .domain-breakdown {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  .domain-breakdown .db-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .domain-breakdown .db-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .domain-breakdown .db-row:last-child { border-bottom: none; }
+  .domain-breakdown .db-key { color: var(--muted); font-size: 10px; min-width: 72px; flex-shrink: 0; }
+  .domain-breakdown .db-val { color: var(--text); word-break: break-all; }
+  .db-val.suspicious { color: var(--accent2); font-weight: 700; }
+  .db-val.safe { color: var(--accent); }
+  .db-val.warn { color: var(--warn); }
+
+  .rep-banner {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    border: 1px solid;
+  }
+  .rep-banner .rep-icon { font-size: 20px; flex-shrink: 0; }
+  .rep-banner strong { display: block; margin-bottom: 2px; font-size: 13px; }
+  .rep-banner p { font-size: 12px; opacity: 0.8; }
+  .rep-danger { background: rgba(255,60,110,0.12); border-color: rgba(255,60,110,0.4); color: var(--accent2); }
+  .rep-danger p { color: #ff8aa8; }
+  .rep-warn   { background: rgba(255,186,8,0.10); border-color: rgba(255,186,8,0.4);  color: var(--warn); }
+  .rep-warn p { color: #d4a000; }
+  .rep-safe   { background: rgba(0,255,136,0.08); border-color: rgba(0,255,136,0.3);  color: var(--accent); }
+  .rep-safe p { color: #00cc70; }
+  .rep-loading { background: var(--surface); border-color: var(--border); color: var(--muted); }
+  .rep-loading p { color: var(--muted); }
+
+  .crc-banner {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    border: 1px solid;
+    margin-bottom: 12px;
+  }
+  .crc-ok   { background: rgba(0,255,136,0.08); border-color: rgba(0,255,136,0.3); color: var(--accent); }
+  .crc-fail { background: rgba(255,60,110,0.12); border-color: rgba(255,60,110,0.4); color: var(--accent2); }
+
+  #url-safety-panel { margin-bottom: 4px; }
+</style>
 </head>
-
 <body>
-    <div class="container">
-        <header>
-            <div class="logo-wrap">
-                <svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="2" width="11" height="11" rx="2" stroke="#00ff88" stroke-width="2" />
-                    <rect x="5" y="5" width="5" height="5" rx="0.5" fill="#00ff88" />
-                    <rect x="19" y="2" width="11" height="11" rx="2" stroke="#00ff88" stroke-width="2" />
-                    <rect x="22" y="5" width="5" height="5" rx="0.5" fill="#00ff88" />
-                    <rect x="2" y="19" width="11" height="11" rx="2" stroke="#00ff88" stroke-width="2" />
-                    <rect x="5" y="22" width="5" height="5" rx="0.5" fill="#00ff88" />
-                    <rect x="19" y="19" width="5" height="5" rx="0.5" fill="#00ff88" />
-                    <rect x="26" y="19" width="5" height="5" rx="0.5" fill="#00ff88" />
-                    <rect x="19" y="26" width="5" height="5" rx="0.5" fill="#00ff88" />
-                    <rect x="26" y="26" width="5" height="5" rx="0.5" fill="#00ff88" />
-                </svg>
-                <span class="logo-name">SafeScan</span>
-            </div>
-            <div class="badge">Safe Mode Active</div>
-            <h1>QR <span>Decoder</span></h1>
-            <p class="subtitle">// read first. act later. stay safe.</p>
-        </header>
+<div class="container">
+  <header>
+    <div class="logo-wrap">
+      <svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="11" height="11" rx="2" stroke="#00ff88" stroke-width="2"/>
+        <rect x="5" y="5" width="5" height="5" rx="0.5" fill="#00ff88"/>
+        <rect x="19" y="2" width="11" height="11" rx="2" stroke="#00ff88" stroke-width="2"/>
+        <rect x="22" y="5" width="5" height="5" rx="0.5" fill="#00ff88"/>
+        <rect x="2" y="19" width="11" height="11" rx="2" stroke="#00ff88" stroke-width="2"/>
+        <rect x="5" y="22" width="5" height="5" rx="0.5" fill="#00ff88"/>
+        <rect x="19" y="19" width="5" height="5" rx="0.5" fill="#00ff88"/>
+        <rect x="26" y="19" width="5" height="5" rx="0.5" fill="#00ff88"/>
+        <rect x="19" y="26" width="5" height="5" rx="0.5" fill="#00ff88"/>
+        <rect x="26" y="26" width="5" height="5" rx="0.5" fill="#00ff88"/>
+      </svg>
+      <span class="logo-name">SafeScan</span>
+    </div>
+    <div class="badge">Safe Mode Active</div>
+    <h1>QR <span>Decoder</span></h1>
+    <p class="subtitle">// read first. act later. stay safe.</p>
+  </header>
 
-        <div class="scanner-card">
-            <div class="tab-bar">
-                <button class="tab active" onclick="switchTab('camera')">📷 Camera</button>
-                <button class="tab" onclick="switchTab('upload')">🖼 Upload Image</button>
-            </div>
-
-            <div class="tab-content">
-                <!-- Camera panel -->
-                <div id="camera-panel">
-                    <div class="video-wrap">
-                        <video id="preview" playsinline muted></video>
-                        <canvas id="canvas" style="display:none"></canvas>
-                        <div class="qr-overlay">
-                            <div class="qr-frame"><span></span>
-                                <div class="scan-line"></div>
-                            </div>
-                        </div>
-                        <div class="no-camera-msg" id="no-cam-msg">
-                            <span class="icon">📷</span>
-                            Click "Start Camera" to begin scanning
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" id="cam-btn" onclick="toggleCamera()">Start Camera</button>
-                </div>
-
-                <!-- Upload panel -->
-                <div id="upload-panel">
-                    <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
-                        <span class="icon">📂</span>
-                        <p><strong>Click to upload</strong> · drag & drop · or <strong>Ctrl+V</strong> to paste<br>PNG,
-                            JPG, GIF, WEBP supported</p>
-                    </div>
-                    <input type="file" id="file-input" accept="image/*" onchange="handleFileUpload(event)">
-                </div>
-            </div>
-
-            <div class="status-bar">
-                <div class="pulse-dot" id="pulse-dot"></div>
-                <span id="status-text">Ready — choose camera or upload an image</span>
-            </div>
-        </div>
-
-        <!-- Result card -->
-        <div id="result-card">
-            <div class="result-header">
-                <span class="result-type-badge" id="type-badge">TEXT</span>
-                <span class="result-title" id="result-title">QR Code Decoded</span>
-            </div>
-            <div class="result-body">
-                <!-- URL Safety Panel -->
-                <div id="url-safety-panel" style="display:none">
-                    <div id="trick-alert" style="display:none"></div>
-                    <!-- Domain breakdown -->
-                    <div class="domain-breakdown" id="domain-breakdown"></div>
-                    <!-- Reputation result -->
-                    <div id="reputation-result"></div>
-                </div>
-
-                <!-- CRC validation (VietQR) -->
-                <div id="crc-result" style="display:none; margin-bottom:14px;"></div>
-
-                <div id="parsed-fields" class="parsed-fields" style="display:none"></div>
-
-                <div class="content-box" id="raw-content"></div>
-
-                <div id="bank-quick-copy" style="display:none; gap:10px; margin-bottom:14px; flex-wrap:wrap;"></div>
-
-                <div class="action-row">
-                    <button class="btn btn-primary" onclick="copyContent()">Copy Raw Content</button>
-                    <button class="btn btn-ghost" onclick="resetResult()">Clear</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="scan-again" id="scan-again-wrap" style="display:none">
-            <button class="btn btn-ghost" onclick="resetResult()">← Scan Another</button>
-        </div>
-
-        <footer>
-            All processing is <span>100% local</span> in your browser.<br>
-            No data is uploaded or stored anywhere.
-        </footer>
+  <div class="scanner-card">
+    <div class="tab-bar">
+      <button class="tab active" onclick="switchTab('camera')">📷 Camera</button>
+      <button class="tab" onclick="switchTab('upload')">🖼 Upload Image</button>
     </div>
 
-    <div class="toast" id="toast">Copied!</div>
+    <div class="tab-content">
+      <!-- Camera panel -->
+      <div id="camera-panel">
+        <div class="video-wrap">
+          <video id="preview" playsinline muted></video>
+          <canvas id="canvas" style="display:none"></canvas>
+          <div class="qr-overlay">
+            <div class="qr-frame"><span></span><div class="scan-line"></div></div>
+          </div>
+          <div class="no-camera-msg" id="no-cam-msg">
+            <span class="icon">📷</span>
+            Click "Start Camera" to begin scanning
+          </div>
+        </div>
+        <button class="btn btn-primary" id="cam-btn" onclick="toggleCamera()">Start Camera</button>
+      </div>
 
-    <script>
-        let stream = null;
-        let scanning = false;
-        let animFrame = null;
-        let currentContent = '';
+      <!-- Upload panel -->
+      <div id="upload-panel">
+        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+          <span class="icon">📂</span>
+          <p><strong>Click to upload</strong> · drag & drop · or <strong>Ctrl+V</strong> to paste<br>PNG, JPG, GIF, WEBP supported</p>
+        </div>
+        <input type="file" id="file-input" accept="image/*" onchange="handleFileUpload(event)">
+      </div>
+    </div>
 
-        // ── Check jsQR loaded ────────────────────────────────────────────────────────
-        function checkJsQR() {
-            if (typeof jsQR === 'undefined') {
-                setStatus(false, '⚠ jsQR library failed to load — check your internet connection and reload');
-                return false;
-            }
-            return true;
+    <div class="status-bar">
+      <div class="pulse-dot" id="pulse-dot"></div>
+      <span id="status-text">Ready — choose camera or upload an image</span>
+    </div>
+  </div>
+
+  <!-- Result card -->
+  <div id="result-card">
+    <div class="result-header">
+      <span class="result-type-badge" id="type-badge">TEXT</span>
+      <span class="result-title" id="result-title">QR Code Decoded</span>
+    </div>
+    <div class="result-body">
+      <!-- URL Safety Panel -->
+      <div id="url-safety-panel" style="display:none">
+        <div id="trick-alert" style="display:none"></div>
+        <!-- Domain breakdown -->
+        <div class="domain-breakdown" id="domain-breakdown"></div>
+        <!-- Reputation result -->
+        <div id="reputation-result"></div>
+      </div>
+
+      <!-- CRC validation (VietQR) -->
+      <div id="crc-result" style="display:none; margin-bottom:14px;"></div>
+
+      <div id="parsed-fields" class="parsed-fields" style="display:none"></div>
+
+      <div class="content-box" id="raw-content"></div>
+
+      <div id="bank-quick-copy" style="display:none; gap:10px; margin-bottom:14px; flex-wrap:wrap;"></div>
+
+      <div class="action-row">
+        <button class="btn btn-primary" onclick="copyContent()">Copy Raw Content</button>
+        <button class="btn btn-ghost" onclick="resetResult()">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scan-again" id="scan-again-wrap" style="display:none">
+    <button class="btn btn-ghost" onclick="resetResult()">← Scan Another</button>
+  </div>
+
+  <footer>
+    All processing is <span>100% local</span> in your browser.<br>
+    No data is uploaded or stored anywhere.
+  </footer>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+let stream = null;
+let scanning = false;
+let animFrame = null;
+let currentContent = '';
+
+// ── Check jsQR loaded ────────────────────────────────────────────────────────
+function checkJsQR() {
+  if (typeof jsQR === 'undefined') {
+    setStatus(false, '⚠ jsQR library failed to load — check your internet connection and reload');
+    return false;
+  }
+  return true;
+}
+
+// ── Tab switch ──────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', (i === 0) === (tab === 'camera')));
+  document.getElementById('camera-panel').style.display = tab === 'camera' ? 'block' : 'none';
+  document.getElementById('upload-panel').style.display = tab === 'upload' ? 'block' : 'none';
+  if (tab !== 'camera' && stream) stopCamera();
+}
+
+// ── Camera ──────────────────────────────────────────────────────────────────
+async function toggleCamera() {
+  if (scanning) { stopCamera(); return; }
+  if (!checkJsQR()) return;
+  const btn = document.getElementById('cam-btn');
+  btn.textContent = 'Starting...';
+  btn.disabled = true;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    const video = document.getElementById('preview');
+    video.srcObject = stream;
+    await video.play();
+    document.getElementById('no-cam-msg').style.display = 'none';
+    scanning = true;
+    btn.textContent = 'Stop Camera';
+    btn.className = 'btn btn-danger';
+    btn.disabled = false;
+    setStatus(true, 'Scanning for QR codes…');
+    requestAnimationFrame(scanFrame);
+  } catch(e) {
+    btn.textContent = 'Start Camera';
+    btn.disabled = false;
+    setStatus(false, 'Camera access denied — try Upload instead');
+  }
+}
+
+function stopCamera() {
+  scanning = false;
+  if (animFrame) cancelAnimationFrame(animFrame);
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+  const video = document.getElementById('preview');
+  video.srcObject = null;
+  document.getElementById('no-cam-msg').style.display = 'flex';
+  const btn = document.getElementById('cam-btn');
+  btn.textContent = 'Start Camera';
+  btn.className = 'btn btn-primary';
+  setStatus(false, 'Camera stopped');
+}
+
+function scanFrame() {
+  if (!scanning) return;
+  const video = document.getElementById('preview');
+  if (video.readyState === video.HAVE_ENOUGH_DATA) {
+    const canvas = document.getElementById('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
+    if (code) {
+      stopCamera();
+      showResult(code.data);
+      return;
+    }
+  }
+  animFrame = requestAnimationFrame(scanFrame);
+}
+
+// ── File upload ──────────────────────────────────────────────────────────────
+function handleFileUpload(e) {
+  if (!checkJsQR()) return;
+  const file = e.target.files[0];
+  if (!file) return;
+  setStatus(true, `Decoding ${file.name}…`);
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.getElementById('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'attemptBoth' });
+      if (code) {
+        showResult(code.data);
+      } else {
+        setStatus(false, 'No QR code found in image — try a clearer photo');
+      }
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+// ── Drag & drop (fixed with dragenter counter to avoid child-leave flicker) ──
+const dz = document.getElementById('drop-zone');
+let dragCounter = 0;
+
+dz.addEventListener('dragenter', e => {
+  e.preventDefault();
+  dragCounter++;
+  dz.classList.add('drag-over');
+});
+
+dz.addEventListener('dragleave', e => {
+  dragCounter--;
+  if (dragCounter <= 0) {
+    dragCounter = 0;
+    dz.classList.remove('drag-over');
+  }
+});
+
+dz.addEventListener('dragover', e => {
+  e.preventDefault(); // required to allow drop
+});
+
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dragCounter = 0;
+  dz.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    handleFileUpload({ target: { files: [file], value: '' } });
+    return;
+  }
+  // Also handle images dragged directly from browser (as dataTransfer items)
+  const items = e.dataTransfer.items;
+  if (items) {
+    for (const item of items) {
+      if (item.kind === 'file' && item.type.startsWith('image/')) {
+        handleFileUpload({ target: { files: [item.getAsFile()], value: '' } });
+        return;
+      }
+    }
+  }
+});
+
+// ── Paste support (Ctrl+V anywhere on page) ──────────────────────────────────
+document.addEventListener('paste', e => {
+  const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      e.preventDefault();
+      const file = item.getAsFile();
+      if (file) {
+        // Switch to upload tab visually
+        switchTab('upload');
+        handleFileUpload({ target: { files: [file], value: '' } });
+        showToast('Image pasted!');
+      }
+      return;
+    }
+  }
+});
+
+// ── EMVCo TLV parser ─────────────────────────────────────────────────────────
+function emvParse(str) {
+  const fields = {};
+  let i = 0;
+  while (i < str.length - 4) {
+    const id = str.slice(i, i+2);
+    const len = parseInt(str.slice(i+2, i+4), 10);
+    if (isNaN(len)) break;
+    const val = str.slice(i+4, i+4+len);
+    fields[id] = val;
+    i += 4 + len;
+  }
+  return fields;
+}
+
+function emvSubParse(val) {
+  return emvParse(val);
+}
+
+// VietQR bank BIN → name map
+const VN_BANKS = {
+  '970436':'Vietcombank','970415':'Vietinbank','970418':'BIDV',
+  '970422':'MB Bank','970432':'VPBank','970423':'TPBank',
+  '970407':'Techcombank','970416':'ACB','970403':'Sacombank',
+  '970433':'VietBank','970448':'OCB','970439':'PVcomBank',
+  '970443':'SHB','970454':'Shinhan Bank','970412':'Pvcombank',
+  '970414':'OceanBank','970440':'SeABank','970441':'VIB',
+  '970437':'HDBank','970449':'LPBank','970417':'Agribank',
+  '422589':'Citibank VN','796500':'Standard Chartered VN',
+  '970425':'ABBank','970427':'VietABank','970429':'SCB',
+  '970444':'CBBank','970446':'Kienlongbank','970452':'KBank',
+  '668888':'Woori Bank','970457':'Cake by VPBank','970458':'TNEX',
+  '970460':'BVBank','970462':'Nam A Bank','963388':'HSBC VN',
+};
+
+function parseVietQR(data) {
+  const top = emvParse(data);
+  const result = [];
+
+  // Format indicator
+  if (top['00']) result.push({ label: 'Format', value: top['00'] === '01' ? 'EMVCo QRCPS-MPM' : top['00'] });
+
+  // Point of initiation
+  if (top['01']) result.push({ label: 'Type', value: top['01'] === '11' ? 'Static (reusable)' : top['01'] === '12' ? 'Dynamic (one-time)' : top['01'] });
+
+  // Merchant account info (IDs 26–51)
+  for (let id = 26; id <= 51; id++) {
+    const key = id.toString().padStart(2,'0');
+    if (!top[key]) continue;
+    const sub = emvSubParse(top[key]);
+    const guid = sub['00'] || '';
+
+    if (guid.includes('A000000727')) {
+      // VietQR / NAPAS — sub['01'] is nested TLV: 00<BIN> 01<accountNo>
+      result.push({ label: '🏦 Payment network', value: 'VietQR (NAPAS)', highlight: true });
+      if (sub['01']) {
+        const inner = emvParse(sub['01']);
+        const bankBin = inner['00'] || '';
+        const accountNo = inner['01'] || '';
+        if (bankBin) {
+          result.push({ label: 'Bank', value: VN_BANKS[bankBin] || ('Unknown (BIN: ' + bankBin + ')') });
+          result.push({ label: 'Bank BIN', value: bankBin });
         }
+        if (accountNo) result.push({ label: '💳 Account number', value: accountNo, highlight: true, copyable: true });
+      }
+      if (sub['02']) result.push({ label: 'Service code', value: sub['02'] === 'QRIBFTTA' ? 'QRIBFTTA (Transfer)' : sub['02'] });
+    } else if (guid) {
+      result.push({ label: `Merchant account (${key})`, value: guid });
+      Object.entries(sub).filter(([k])=>k!=='00').forEach(([k,v]) => {
+        result.push({ label: `  └ Field ${k}`, value: v });
+      });
+    }
+  }
 
-        // ── Tab switch ──────────────────────────────────────────────────────────────
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', (i === 0) === (tab === 'camera')));
-            document.getElementById('camera-panel').style.display = tab === 'camera' ? 'block' : 'none';
-            document.getElementById('upload-panel').style.display = tab === 'upload' ? 'block' : 'none';
-            if (tab !== 'camera' && stream) stopCamera();
-        }
+  // Currency
+  if (top['53']) {
+    const currencies = {'704':'VND','840':'USD','978':'EUR','826':'GBP','392':'JPY','156':'CNY','410':'KRW'};
+    result.push({ label: 'Currency', value: currencies[top['53']] || top['53'] });
+  }
 
-        // ── Camera ──────────────────────────────────────────────────────────────────
-        async function toggleCamera() {
-            if (scanning) { stopCamera(); return; }
-            if (!checkJsQR()) return;
-            const btn = document.getElementById('cam-btn');
-            btn.textContent = 'Starting...';
-            btn.disabled = true;
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                const video = document.getElementById('preview');
-                video.srcObject = stream;
-                await video.play();
-                document.getElementById('no-cam-msg').style.display = 'none';
-                scanning = true;
-                btn.textContent = 'Stop Camera';
-                btn.className = 'btn btn-danger';
-                btn.disabled = false;
-                setStatus(true, 'Scanning for QR codes…');
-                requestAnimationFrame(scanFrame);
-            } catch (e) {
-                btn.textContent = 'Start Camera';
-                btn.disabled = false;
-                setStatus(false, 'Camera access denied — try Upload instead');
-            }
-        }
+  // Amount
+  if (top['54']) result.push({ label: '💰 Amount', value: Number(top['54']).toLocaleString('vi-VN') + (top['53']==='704'?' ₫':''), highlight: true });
 
-        function stopCamera() {
-            scanning = false;
-            if (animFrame) cancelAnimationFrame(animFrame);
-            if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-            const video = document.getElementById('preview');
-            video.srcObject = null;
-            document.getElementById('no-cam-msg').style.display = 'flex';
-            const btn = document.getElementById('cam-btn');
-            btn.textContent = 'Start Camera';
-            btn.className = 'btn btn-primary';
-            setStatus(false, 'Camera stopped');
-        }
+  // Country
+  if (top['58']) result.push({ label: 'Country', value: top['58'] === 'VN' ? '🇻🇳 Vietnam' : top['58'] });
 
-        function scanFrame() {
-            if (!scanning) return;
-            const video = document.getElementById('preview');
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                const canvas = document.getElementById('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(video, 0, 0);
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
-                if (code) {
-                    stopCamera();
-                    showResult(code.data);
-                    return;
-                }
-            }
-            animFrame = requestAnimationFrame(scanFrame);
-        }
+  // Merchant name
+  if (top['59']) result.push({ label: '👤 Recipient name', value: top['59'], highlight: true });
 
-        // ── File upload ──────────────────────────────────────────────────────────────
-        function handleFileUpload(e) {
-            if (!checkJsQR()) return;
-            const file = e.target.files[0];
-            if (!file) return;
-            setStatus(true, `Decoding ${file.name}…`);
-            const reader = new FileReader();
-            reader.onload = ev => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.getElementById('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'attemptBoth' });
-                    if (code) {
-                        showResult(code.data);
-                    } else {
-                        setStatus(false, 'No QR code found in image — try a clearer photo');
-                    }
-                };
-                img.src = ev.target.result;
-            };
-            reader.readAsDataURL(file);
-            e.target.value = '';
-        }
+  // Merchant city
+  if (top['60']) result.push({ label: 'City', value: top['60'] });
 
-        // ── Drag & drop (fixed with dragenter counter to avoid child-leave flicker) ──
-        const dz = document.getElementById('drop-zone');
-        let dragCounter = 0;
+  // Postal code
+  if (top['61']) result.push({ label: 'Postal code', value: top['61'] });
 
-        dz.addEventListener('dragenter', e => {
-            e.preventDefault();
-            dragCounter++;
-            dz.classList.add('drag-over');
-        });
+  // Additional data
+  if (top['62']) {
+    const sub = emvSubParse(top['62']);
+    if (sub['01']) result.push({ label: '📝 Transfer message', value: sub['01'], highlight: true });
+    if (sub['05']) result.push({ label: 'Reference', value: sub['05'] });
+    if (sub['07']) result.push({ label: 'Terminal ID', value: sub['07'] });
+    if (sub['08']) result.push({ label: 'Purpose', value: sub['08'] });
+  }
 
-        dz.addEventListener('dragleave', e => {
-            dragCounter--;
-            if (dragCounter <= 0) {
-                dragCounter = 0;
-                dz.classList.remove('drag-over');
-            }
-        });
+  // CRC
+  if (top['63']) result.push({ label: 'CRC checksum', value: top['63'] });
 
-        dz.addEventListener('dragover', e => {
-            e.preventDefault(); // required to allow drop
-        });
+  return result.length > 0 ? result : null;
+}
 
-        dz.addEventListener('drop', e => {
-            e.preventDefault();
-            dragCounter = 0;
-            dz.classList.remove('drag-over');
-            const file = e.dataTransfer.files[0];
-            if (file) {
-                handleFileUpload({ target: { files: [file], value: '' } });
-                return;
-            }
-            // Also handle images dragged directly from browser (as dataTransfer items)
-            const items = e.dataTransfer.items;
-            if (items) {
-                for (const item of items) {
-                    if (item.kind === 'file' && item.type.startsWith('image/')) {
-                        handleFileUpload({ target: { files: [item.getAsFile()], value: '' } });
-                        return;
-                    }
-                }
-            }
-        });
+// ── Generic type detect ───────────────────────────────────────────────────────
+function detectType(data) {
+  if (/^https?:\/\//i.test(data)) return 'url';
+  if (/^WIFI:/i.test(data)) return 'wifi';
+  if (/^tel:/i.test(data)) return 'phone';
+  if (/^mailto:/i.test(data)) return 'email';
+  if (/^BEGIN:VCARD/i.test(data)) return 'vcard';
+  if (/^SMSTO:/i.test(data)) return 'sms';
+  if (/^geo:/i.test(data)) return 'location';
+  // EMVCo: starts with "000201"
+  if (/^000201/.test(data)) return 'emvco';
+  return 'text';
+}
 
-        // ── Paste support (Ctrl+V anywhere on page) ──────────────────────────────────
-        document.addEventListener('paste', e => {
-            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-            for (const item of items) {
-                if (item.type.startsWith('image/')) {
-                    e.preventDefault();
-                    const file = item.getAsFile();
-                    if (file) {
-                        // Switch to upload tab visually
-                        switchTab('upload');
-                        handleFileUpload({ target: { files: [file], value: '' } });
-                        showToast('Image pasted!');
-                    }
-                    return;
-                }
-            }
-        });
+function parseWifi(data) {
+  const get = (key) => { const m = data.match(new RegExp(key + ':([^;]+)')); return m ? m[1] : '—'; };
+  return [
+    { label: 'Network (SSID)', value: get('S') },
+    { label: 'Password', value: get('P') },
+    { label: 'Security', value: get('T') },
+    { label: 'Hidden', value: get('H') === 'true' ? 'Yes' : 'No' },
+  ];
+}
 
-        // ── EMVCo TLV parser ─────────────────────────────────────────────────────────
-        function emvParse(str) {
-            const fields = {};
-            let i = 0;
-            while (i < str.length - 4) {
-                const id = str.slice(i, i + 2);
-                const len = parseInt(str.slice(i + 2, i + 4), 10);
-                if (isNaN(len)) break;
-                const val = str.slice(i + 4, i + 4 + len);
-                fields[id] = val;
-                i += 4 + len;
-            }
-            return fields;
-        }
+function showResult(data) {
+  currentContent = data;
+  const type = detectType(data);
+  const card = document.getElementById('result-card');
+  const badge = document.getElementById('type-badge');
+  const rawBox = document.getElementById('raw-content');
+  const urlWarn = document.getElementById('url-warning');
+  const parsedDiv = document.getElementById('parsed-fields');
 
-        function emvSubParse(val) {
-            return emvParse(val);
-        }
+  const typeLabels = { url:'URL', wifi:'Wi-Fi', phone:'Phone', email:'Email', vcard:'Contact', sms:'SMS', location:'Location', emvco:'VietQR / Bank', text:'Text' };
+  badge.textContent = typeLabels[type] || 'TEXT';
+  badge.className = `result-type-badge type-${['vcard','sms','location','emvco'].includes(type) ? 'text' : type}`;
+  if (type === 'emvco') badge.className = 'result-type-badge type-wifi';
 
-        // VietQR bank BIN → name map
-        const VN_BANKS = {
-            '970436': 'Vietcombank', '970415': 'Vietinbank', '970418': 'BIDV',
-            '970422': 'MB Bank', '970432': 'VPBank', '970423': 'TPBank',
-            '970407': 'Techcombank', '970416': 'ACB', '970403': 'Sacombank',
-            '970433': 'VietBank', '970448': 'OCB', '970439': 'PVcomBank',
-            '970443': 'SHB', '970454': 'Shinhan Bank', '970412': 'Pvcombank',
-            '970414': 'OceanBank', '970440': 'SeABank', '970441': 'VIB',
-            '970437': 'HDBank', '970449': 'LPBank', '970417': 'Agribank',
-            '422589': 'Citibank VN', '796500': 'Standard Chartered VN',
-            '970425': 'ABBank', '970427': 'VietABank', '970429': 'SCB',
-            '970444': 'CBBank', '970446': 'Kienlongbank', '970452': 'KBank',
-            '668888': 'Woori Bank', '970457': 'Cake by VPBank', '970458': 'TNEX',
-            '970460': 'BVBank', '970462': 'Nam A Bank', '963388': 'HSBC VN',
-        };
+  // URL safety panel
+  const safetyPanel = document.getElementById('url-safety-panel');
+  const crcResult   = document.getElementById('crc-result');
+  safetyPanel.style.display = 'none';
+  crcResult.style.display   = 'none';
 
-        function parseVietQR(data) {
-            const top = emvParse(data);
-            const result = [];
+  if (type === 'url') {
+    safetyPanel.style.display = 'block';
+    renderDomainBreakdown(data);
+    checkReputation(data);
+  }
+  if (type === 'emvco') {
+    const crcOk = verifyCRC(data);
+    crcResult.style.display = 'block';
+    if (crcOk === true) {
+      crcResult.innerHTML = '<div class="crc-banner crc-ok">✓ CRC checksum valid — QR data has not been tampered with</div>';
+    } else if (crcOk === false) {
+      crcResult.innerHTML = '<div class="crc-banner crc-fail">✗ CRC checksum FAILED — this QR may have been modified! Do not proceed.</div>';
+    } else {
+      crcResult.innerHTML = '<div class="crc-banner" style="background:var(--surface);border-color:var(--border);color:var(--muted);">CRC checksum not present</div>';
+    }
+  }
 
-            // Format indicator
-            if (top['00']) result.push({ label: 'Format', value: top['00'] === '01' ? 'EMVCo QRCPS-MPM' : top['00'] });
+  parsedDiv.innerHTML = '';
 
-            // Point of initiation
-            if (top['01']) result.push({ label: 'Type', value: top['01'] === '11' ? 'Static (reusable)' : top['01'] === '12' ? 'Dynamic (one-time)' : top['01'] });
+  let fields = null;
+  if (type === 'wifi') fields = parseWifi(data);
+  else if (type === 'emvco') fields = parseVietQR(data);
 
-            // Merchant account info (IDs 26–51)
-            for (let id = 26; id <= 51; id++) {
-                const key = id.toString().padStart(2, '0');
-                if (!top[key]) continue;
-                const sub = emvSubParse(top[key]);
-                const guid = sub['00'] || '';
+  if (fields && fields.length) {
+    parsedDiv.style.display = 'block';
+    fields.forEach(f => {
+      const hl = f.highlight ? 'style="color:var(--accent);font-weight:700"' : '';
+      const copyBtn = f.copyable
+        ? `<button onclick="copyText('${f.value.replace(/'/g,"\\'")}'); event.stopPropagation()" style="margin-left:8px;padding:2px 8px;font-size:10px;font-family:var(--font-mono);background:transparent;border:1px solid var(--muted);border-radius:4px;color:var(--muted);cursor:pointer">copy</button>`
+        : '';
+      parsedDiv.innerHTML += `<div class="field-row"><span class="field-label">${f.label}</span><span class="field-value" ${hl}>${f.value}${copyBtn}</span></div>`;
+    });
+  } else {
+    parsedDiv.style.display = 'none';
+  }
 
-                if (guid.includes('A000000727')) {
-                    // VietQR / NAPAS — sub['01'] is nested TLV: 00<BIN> 01<accountNo>
-                    result.push({ label: '🏦 Payment network', value: 'VietQR (NAPAS)', highlight: true });
-                    if (sub['01']) {
-                        const inner = emvParse(sub['01']);
-                        const bankBin = inner['00'] || '';
-                        const accountNo = inner['01'] || '';
-                        if (bankBin) {
-                            result.push({ label: 'Bank', value: VN_BANKS[bankBin] || ('Unknown (BIN: ' + bankBin + ')') });
-                            result.push({ label: 'Bank BIN', value: bankBin });
-                        }
-                        if (accountNo) result.push({ label: '💳 Account number', value: accountNo, highlight: true, copyable: true });
-                    }
-                    if (sub['02']) result.push({ label: 'Service code', value: sub['02'] === 'QRIBFTTA' ? 'QRIBFTTA (Transfer)' : sub['02'] });
-                } else if (guid) {
-                    result.push({ label: `Merchant account (${key})`, value: guid });
-                    Object.entries(sub).filter(([k]) => k !== '00').forEach(([k, v]) => {
-                        result.push({ label: `  └ Field ${k}`, value: v });
-                    });
-                }
-            }
+  rawBox.textContent = data;
 
-            // Currency
-            if (top['53']) {
-                const currencies = { '704': 'VND', '840': 'USD', '978': 'EUR', '826': 'GBP', '392': 'JPY', '156': 'CNY', '410': 'KRW' };
-                result.push({ label: 'Currency', value: currencies[top['53']] || top['53'] });
-            }
-
-            // Amount
-            if (top['54']) result.push({ label: '💰 Amount', value: Number(top['54']).toLocaleString('vi-VN') + (top['53'] === '704' ? ' ₫' : ''), highlight: true });
-
-            // Country
-            if (top['58']) result.push({ label: 'Country', value: top['58'] === 'VN' ? '🇻🇳 Vietnam' : top['58'] });
-
-            // Merchant name
-            if (top['59']) result.push({ label: '👤 Recipient name', value: top['59'], highlight: true });
-
-            // Merchant city
-            if (top['60']) result.push({ label: 'City', value: top['60'] });
-
-            // Postal code
-            if (top['61']) result.push({ label: 'Postal code', value: top['61'] });
-
-            // Additional data
-            if (top['62']) {
-                const sub = emvSubParse(top['62']);
-                if (sub['01']) result.push({ label: '📝 Transfer message', value: sub['01'], highlight: true });
-                if (sub['05']) result.push({ label: 'Reference', value: sub['05'] });
-                if (sub['07']) result.push({ label: 'Terminal ID', value: sub['07'] });
-                if (sub['08']) result.push({ label: 'Purpose', value: sub['08'] });
-            }
-
-            // CRC
-            if (top['63']) result.push({ label: 'CRC checksum', value: top['63'] });
-
-            return result.length > 0 ? result : null;
-        }
-
-        // ── Generic type detect ───────────────────────────────────────────────────────
-        function detectType(data) {
-            if (/^https?:\/\//i.test(data)) return 'url';
-            if (/^WIFI:/i.test(data)) return 'wifi';
-            if (/^tel:/i.test(data)) return 'phone';
-            if (/^mailto:/i.test(data)) return 'email';
-            if (/^BEGIN:VCARD/i.test(data)) return 'vcard';
-            if (/^SMSTO:/i.test(data)) return 'sms';
-            if (/^geo:/i.test(data)) return 'location';
-            // EMVCo: starts with "000201"
-            if (/^000201/.test(data)) return 'emvco';
-            return 'text';
-        }
-
-        function parseWifi(data) {
-            const get = (key) => { const m = data.match(new RegExp(key + ':([^;]+)')); return m ? m[1] : '—'; };
-            return [
-                { label: 'Network (SSID)', value: get('S') },
-                { label: 'Password', value: get('P') },
-                { label: 'Security', value: get('T') },
-                { label: 'Hidden', value: get('H') === 'true' ? 'Yes' : 'No' },
-            ];
-        }
-
-        function showResult(data) {
-            currentContent = data;
-            const type = detectType(data);
-            const card = document.getElementById('result-card');
-            const badge = document.getElementById('type-badge');
-            const rawBox = document.getElementById('raw-content');
-            const urlWarn = document.getElementById('url-warning');
-            const parsedDiv = document.getElementById('parsed-fields');
-
-            const typeLabels = { url: 'URL', wifi: 'Wi-Fi', phone: 'Phone', email: 'Email', vcard: 'Contact', sms: 'SMS', location: 'Location', emvco: 'VietQR / Bank', text: 'Text' };
-            badge.textContent = typeLabels[type] || 'TEXT';
-            badge.className = `result-type-badge type-${['vcard', 'sms', 'location', 'emvco'].includes(type) ? 'text' : type}`;
-            if (type === 'emvco') badge.className = 'result-type-badge type-wifi';
-
-            // URL safety panel
-            const safetyPanel = document.getElementById('url-safety-panel');
-            const crcResult = document.getElementById('crc-result');
-            safetyPanel.style.display = 'none';
-            crcResult.style.display = 'none';
-
-            if (type === 'url') {
-                safetyPanel.style.display = 'block';
-                renderDomainBreakdown(data);
-                checkReputation(data);
-            }
-            if (type === 'emvco') {
-                const crcOk = verifyCRC(data);
-                crcResult.style.display = 'block';
-                if (crcOk === true) {
-                    crcResult.innerHTML = '<div class="crc-banner crc-ok">✓ CRC checksum valid — QR data has not been tampered with</div>';
-                } else if (crcOk === false) {
-                    crcResult.innerHTML = '<div class="crc-banner crc-fail">✗ CRC checksum FAILED — this QR may have been modified! Do not proceed.</div>';
-                } else {
-                    crcResult.innerHTML = '<div class="crc-banner" style="background:var(--surface);border-color:var(--border);color:var(--muted);">CRC checksum not present</div>';
-                }
-            }
-
-            parsedDiv.innerHTML = '';
-
-            let fields = null;
-            if (type === 'wifi') fields = parseWifi(data);
-            else if (type === 'emvco') fields = parseVietQR(data);
-
-            if (fields && fields.length) {
-                parsedDiv.style.display = 'block';
-                fields.forEach(f => {
-                    const hl = f.highlight ? 'style="color:var(--accent);font-weight:700"' : '';
-                    const copyBtn = f.copyable
-                        ? `<button onclick="copyText('${f.value.replace(/'/g, "\\'")}'); event.stopPropagation()" style="margin-left:8px;padding:2px 8px;font-size:10px;font-family:var(--font-mono);background:transparent;border:1px solid var(--muted);border-radius:4px;color:var(--muted);cursor:pointer">copy</button>`
-                        : '';
-                    parsedDiv.innerHTML += `<div class="field-row"><span class="field-label">${f.label}</span><span class="field-value" ${hl}>${f.value}${copyBtn}</span></div>`;
-                });
-            } else {
-                parsedDiv.style.display = 'none';
-            }
-
-            rawBox.textContent = data;
-
-            // Bank quick-copy cards
-            const bankQuick = document.getElementById('bank-quick-copy');
-            bankQuick.innerHTML = '';
-            if (type === 'emvco' && fields) {
-                const bankField = fields.find(f => f.label === 'Bank');
-                const accountField = fields.find(f => f.label === '💳 Account number');
-                if (bankField || accountField) {
-                    bankQuick.style.display = 'flex';
-                    if (bankField) {
-                        bankQuick.innerHTML += `<button class="quick-card" onclick="copyText('${bankField.value.replace(/'/g, "\'")}')">
+  // Bank quick-copy cards
+  const bankQuick = document.getElementById('bank-quick-copy');
+  bankQuick.innerHTML = '';
+  if (type === 'emvco' && fields) {
+    const bankField = fields.find(f => f.label === 'Bank');
+    const accountField = fields.find(f => f.label === '💳 Account number');
+    if (bankField || accountField) {
+      bankQuick.style.display = 'flex';
+      if (bankField) {
+        bankQuick.innerHTML += `<button class="quick-card" onclick="copyText('${bankField.value.replace(/'/g,"\'")}')">
           <div class="qc-label">🏦 Bank</div>
           <div class="qc-value">${bankField.value}</div>
           <div class="qc-hint">tap to copy</div>
         </button>`;
-                    }
-                    if (accountField) {
-                        bankQuick.innerHTML += `<button class="quick-card" onclick="copyText('${accountField.value.replace(/'/g, "\'")}')">
+      }
+      if (accountField) {
+        bankQuick.innerHTML += `<button class="quick-card" onclick="copyText('${accountField.value.replace(/'/g,"\'")}')">
           <div class="qc-label">💳 Account number</div>
           <div class="qc-value">${accountField.value}</div>
           <div class="qc-hint">tap to copy</div>
         </button>`;
-                    }
-                } else {
-                    bankQuick.style.display = 'none';
-                }
-            } else {
-                bankQuick.style.display = 'none';
-            }
+      }
+    } else {
+      bankQuick.style.display = 'none';
+    }
+  } else {
+    bankQuick.style.display = 'none';
+  }
 
-            card.style.display = 'block';
-            document.getElementById('scan-again-wrap').style.display = 'block';
-            setStatus(false, '✓ QR code decoded successfully');
-            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
+  card.style.display = 'block';
+  document.getElementById('scan-again-wrap').style.display = 'block';
+  setStatus(false, '✓ QR code decoded successfully');
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
 
-        function copyText(text) {
-            navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => {
-                const ta = document.createElement('textarea');
-                ta.value = text; document.body.appendChild(ta); ta.select();
-                document.execCommand('copy'); document.body.removeChild(ta);
-                showToast('Copied!');
-            });
-        }
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('Copied!');
+  });
+}
 
-        // ═══════════════════════════════════════════════════════════════
-        // SAFETY FEATURE 1: CRC-16/CCITT verification for VietQR/EMVCo
-        // ═══════════════════════════════════════════════════════════════
-        function verifyCRC(data) {
-            if (!data.includes('6304')) return null;
-            const idx = data.lastIndexOf('6304');
-            const payload = data.slice(0, idx + 4); // include "6304"
-            const storedCRC = data.slice(idx + 4, idx + 8).toUpperCase();
-            if (!storedCRC || storedCRC.length !== 4) return null;
+// ═══════════════════════════════════════════════════════════════
+// SAFETY FEATURE 1: CRC-16/CCITT verification for VietQR/EMVCo
+// ═══════════════════════════════════════════════════════════════
+function verifyCRC(data) {
+  if (!data.includes('6304')) return null;
+  const idx = data.lastIndexOf('6304');
+  const payload = data.slice(0, idx + 4); // include "6304"
+  const storedCRC = data.slice(idx + 4, idx + 8).toUpperCase();
+  if (!storedCRC || storedCRC.length !== 4) return null;
 
-            // CRC-16/CCITT-FALSE (poly 0x1021, init 0xFFFF)
-            let crc = 0xFFFF;
-            for (let i = 0; i < payload.length; i++) {
-                crc ^= payload.charCodeAt(i) << 8;
-                for (let j = 0; j < 8; j++) {
-                    crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
-                    crc &= 0xFFFF;
-                }
-            }
-            const computed = crc.toString(16).toUpperCase().padStart(4, '0');
-            return computed === storedCRC;
-        }
+  // CRC-16/CCITT-FALSE (poly 0x1021, init 0xFFFF)
+  let crc = 0xFFFF;
+  for (let i = 0; i < payload.length; i++) {
+    crc ^= payload.charCodeAt(i) << 8;
+    for (let j = 0; j < 8; j++) {
+      crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+      crc &= 0xFFFF;
+    }
+  }
+  const computed = crc.toString(16).toUpperCase().padStart(4, '0');
+  return computed === storedCRC;
+}
 
-        // ═══════════════════════════════════════════════════════════════
-        // SAFETY FEATURE 2: Domain breakdown + trick detection
-        // ═══════════════════════════════════════════════════════════════
-        function renderDomainBreakdown(url) {
-            const box = document.getElementById('domain-breakdown');
-            try {
-                const u = new URL(url);
-                const hostname = u.hostname;
-                const parts = hostname.split('.');
-                const tld = parts.slice(-2).join('.');
-                const subdomain = parts.length > 2 ? parts.slice(0, -2).join('.') : null;
+// ═══════════════════════════════════════════════════════════════
+// SAFETY FEATURE 2: Domain breakdown + trick detection
+// ═══════════════════════════════════════════════════════════════
+function renderDomainBreakdown(url) {
+  const box = document.getElementById('domain-breakdown');
+  try {
+    const u = new URL(url);
+    const hostname = u.hostname;
+    const parts = hostname.split('.');
+    const tld = parts.slice(-2).join('.');
+    const subdomain = parts.length > 2 ? parts.slice(0, -2).join('.') : null;
 
-                const tricks = [];
+    const tricks = [];
 
-                // Trick 1: Legit brand name buried in subdomain
-                const knownBrands = ['paypal', 'vietcombank', 'bidv', 'vietinbank', 'mbbank', 'vpbank',
-                    'techcombank', 'acb', 'sacombank', 'apple', 'google', 'facebook', 'microsoft',
-                    'amazon', 'netflix', 'tpbank', 'agribank', 'napas', 'banking', 'secure', 'login'];
-                const domainLower = hostname.toLowerCase();
-                const registrable = parts.slice(-2)[0].toLowerCase();
-                knownBrands.forEach(brand => {
-                    if (domainLower.includes(brand) && registrable !== brand) {
-                        tricks.push(`Brand "${brand}" in subdomain — real domain is <strong>${tld}</strong>`);
-                    }
-                });
+    // Trick 1: Legit brand name buried in subdomain
+    const knownBrands = ['paypal','vietcombank','bidv','vietinbank','mbbank','vpbank',
+      'techcombank','acb','sacombank','apple','google','facebook','microsoft',
+      'amazon','netflix','tpbank','agribank','napas','banking','secure','login'];
+    const domainLower = hostname.toLowerCase();
+    const registrable = parts.slice(-2)[0].toLowerCase();
+    knownBrands.forEach(brand => {
+      if (domainLower.includes(brand) && registrable !== brand) {
+        tricks.push(`Brand "${brand}" in subdomain — real domain is <strong>${tld}</strong>`);
+      }
+    });
 
-                // Trick 2: IP address instead of domain
-                if (/^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)) {
-                    tricks.push('IP address used instead of domain name — major red flag');
-                }
+    // Trick 2: IP address instead of domain
+    if (/^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)) {
+      tricks.push('IP address used instead of domain name — major red flag');
+    }
 
-                // Trick 3: Homograph (non-ASCII chars in domain)
-                if (/[^\x00-\x7F]/.test(hostname)) {
-                    tricks.push('Non-ASCII characters in domain — possible homograph attack');
-                }
+    // Trick 3: Homograph (non-ASCII chars in domain)
+    if (/[^\x00-\x7F]/.test(hostname)) {
+      tricks.push('Non-ASCII characters in domain — possible homograph attack');
+    }
 
-                // Trick 4: Suspicious TLDs
-                const suspiciousTLDs = ['.tk', '.ml', '.ga', '.cf', '.gq', '.xyz', '.top', '.click', '.loan', '.work'];
-                if (suspiciousTLDs.some(t => hostname.endsWith(t))) {
-                    tricks.push('High-risk TLD — frequently used in phishing');
-                }
+    // Trick 4: Suspicious TLDs
+    const suspiciousTLDs = ['.tk','.ml','.ga','.cf','.gq','.xyz','.top','.click','.loan','.work'];
+    if (suspiciousTLDs.some(t => hostname.endsWith(t))) {
+      tricks.push('High-risk TLD — frequently used in phishing');
+    }
 
-                // Trick 5: Excessive subdomains
-                if (parts.length > 4) {
-                    tricks.push('Many subdomains — often used to hide the real domain');
-                }
+    // Trick 5: Excessive subdomains
+    if (parts.length > 4) {
+      tricks.push('Many subdomains — often used to hide the real domain');
+    }
 
-                // Trick 6: HTTP (not HTTPS)
-                if (u.protocol === 'http:') {
-                    tricks.push('Not encrypted (HTTP) — your data can be intercepted');
-                }
+    // Trick 6: HTTP (not HTTPS)
+    if (u.protocol === 'http:') {
+      tricks.push('Not encrypted (HTTP) — your data can be intercepted');
+    }
 
-                // Trick 7: Redirect keywords in path
-                if (/redirect|continue|return|goto|url=|link=/i.test(url)) {
-                    tricks.push('Redirect parameter detected — destination may differ');
-                }
+    // Trick 7: Redirect keywords in path
+    if (/redirect|continue|return|goto|url=|link=/i.test(url)) {
+      tricks.push('Redirect parameter detected — destination may differ');
+    }
 
-                let html = '<div class="db-title">URL breakdown</div>';
+    let html = '<div class="db-title">URL breakdown</div>';
 
-                // Protocol
-                const protoClass = u.protocol === 'https:' ? 'safe' : 'suspicious';
-                html += `<div class="db-row"><span class="db-key">Protocol</span><span class="db-val ${protoClass}">${u.protocol.replace(':', '')} ${u.protocol === 'https:' ? '🔒' : '⚠ not encrypted'}</span></div>`;
+    // Protocol
+    const protoClass = u.protocol === 'https:' ? 'safe' : 'suspicious';
+    html += `<div class="db-row"><span class="db-key">Protocol</span><span class="db-val ${protoClass}">${u.protocol.replace(':','')} ${u.protocol==='https:'?'🔒':'⚠ not encrypted'}</span></div>`;
 
-                // Subdomain
-                if (subdomain) {
-                    const subClass = tricks.length > 0 ? 'warn' : '';
-                    html += `<div class="db-row"><span class="db-key">Subdomain</span><span class="db-val ${subClass}">${subdomain}</span></div>`;
-                }
+    // Subdomain
+    if (subdomain) {
+      const subClass = tricks.length > 0 ? 'warn' : '';
+      html += `<div class="db-row"><span class="db-key">Subdomain</span><span class="db-val ${subClass}">${subdomain}</span></div>`;
+    }
 
-                // Registrable domain (the real one)
-                html += `<div class="db-row"><span class="db-key">Real domain</span><span class="db-val">${tld}</span></div>`;
+    // Registrable domain (the real one)
+    html += `<div class="db-row"><span class="db-key">Real domain</span><span class="db-val">${tld}</span></div>`;
 
-                // Path
-                if (u.pathname && u.pathname !== '/') {
-                    html += `<div class="db-row"><span class="db-key">Path</span><span class="db-val">${u.pathname}</span></div>`;
-                }
+    // Path
+    if (u.pathname && u.pathname !== '/') {
+      html += `<div class="db-row"><span class="db-key">Path</span><span class="db-val">${u.pathname}</span></div>`;
+    }
 
-                // Query params
-                if (u.search) {
-                    html += `<div class="db-row"><span class="db-key">Params</span><span class="db-val">${u.search}</span></div>`;
-                }
+    // Query params
+    if (u.search) {
+      html += `<div class="db-row"><span class="db-key">Params</span><span class="db-val">${u.search}</span></div>`;
+    }
 
-                box.innerHTML = html;
-                box.style.display = 'block';
-                box._trickCount = tricks.length;
+    box.innerHTML = html;
+    box.style.display = 'block';
+    box._trickCount = tricks.length;
 
-                // Show a loud top-level alert if tricks detected
-                const trickAlert = document.getElementById('trick-alert');
-                if (tricks.length > 0) {
-                    let trickHtml = `<div class="rep-banner rep-danger" style="margin-bottom:12px">
+    // Show a loud top-level alert if tricks detected
+    const trickAlert = document.getElementById('trick-alert');
+    if (tricks.length > 0) {
+      let trickHtml = `<div class="rep-banner rep-danger" style="margin-bottom:12px">
         <span class="rep-icon">🚨</span>
         <div><strong>PHISHING TRICKS DETECTED (${tricks.length})</strong>`;
-                    tricks.forEach(t => { trickHtml += `<p style="margin-top:4px">• ${t}</p>`; });
-                    trickHtml += '</div></div>';
-                    trickAlert.innerHTML = trickHtml;
-                    trickAlert.style.display = 'block';
-                } else {
-                    trickAlert.style.display = 'none';
-                }
-            } catch (e) {
-                box.innerHTML = '<div class="db-title">Could not parse URL</div>';
-                box._trickCount = 0;
-            }
+      tricks.forEach(t => { trickHtml += `<p style="margin-top:4px">• ${t}</p>`; });
+      trickHtml += '</div></div>';
+      trickAlert.innerHTML = trickHtml;
+      trickAlert.style.display = 'block';
+    } else {
+      trickAlert.style.display = 'none';
+    }
+  } catch(e) {
+    box.innerHTML = '<div class="db-title">Could not parse URL</div>';
+    box._trickCount = 0;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SAFETY FEATURE 3: Google Safe Browsing API reputation check
+// ═══════════════════════════════════════════════════════════════
+async function checkReputation(url) {
+  const repDiv = document.getElementById('reputation-result');
+  const trickCount = document.getElementById('domain-breakdown')._trickCount || 0;
+
+  // Show loading
+  repDiv.innerHTML = '<div class="rep-banner rep-loading"><span class="rep-icon">🔍</span><div><strong>Checking URL reputation…</strong><p>Querying Google Safe Browsing database</p></div></div>';
+
+  // Google Safe Browsing API key (public/free tier — lookups only, no quota issues for personal use)
+  const API_KEY = 'FAKE_API_KEY';
+  const endpoint = `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${API_KEY}`;
+
+  try {
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        client: { clientId: 'safescan-qr', clientVersion: '1.0' },
+        threatInfo: {
+          threatTypes: ['MALWARE','SOCIAL_ENGINEERING','UNWANTED_SOFTWARE','POTENTIALLY_HARMFUL_APPLICATION'],
+          platformTypes: ['ANY_PLATFORM'],
+          threatEntryTypes: ['URL'],
+          threatEntries: [{ url }]
         }
+      })
+    });
 
-        // ═══════════════════════════════════════════════════════════════
-        // SAFETY FEATURE 3: Google Safe Browsing API reputation check
-        // ═══════════════════════════════════════════════════════════════
-        async function checkReputation(url) {
-            const repDiv = document.getElementById('reputation-result');
-            const trickCount = document.getElementById('domain-breakdown')._trickCount || 0;
+    const data = await resp.json();
+    const matches = data.matches || [];
 
-            // Show loading
-            repDiv.innerHTML = '<div class="rep-banner rep-loading"><span class="rep-icon">🔍</span><div><strong>Checking URL reputation…</strong><p>Querying Google Safe Browsing database</p></div></div>';
-
-            // Google Safe Browsing API key (public/free tier — lookups only, no quota issues for personal use)
-            const API_KEY = 'AIzaSyD9PrkFBhbJHGwBCsHzGdBxOIVPYkOHBNs';
-            const endpoint = `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${API_KEY}`;
-
-            try {
-                const resp = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        client: { clientId: 'safescan-qr', clientVersion: '1.0' },
-                        threatInfo: {
-                            threatTypes: ['MALWARE', 'SOCIAL_ENGINEERING', 'UNWANTED_SOFTWARE', 'POTENTIALLY_HARMFUL_APPLICATION'],
-                            platformTypes: ['ANY_PLATFORM'],
-                            threatEntryTypes: ['URL'],
-                            threatEntries: [{ url }]
-                        }
-                    })
-                });
-
-                const data = await resp.json();
-                const matches = data.matches || [];
-
-                if (matches.length > 0) {
-                    const types = [...new Set(matches.map(m => m.threatType.replace(/_/g, ' ')))].join(', ');
-                    repDiv.innerHTML = `<div class="rep-banner rep-danger">
+    if (matches.length > 0) {
+      const types = [...new Set(matches.map(m => m.threatType.replace(/_/g,' ')))].join(', ');
+      repDiv.innerHTML = `<div class="rep-banner rep-danger">
         <span class="rep-icon">🚨</span>
         <div><strong>DANGEROUS — Flagged by Google Safe Browsing</strong>
         <p>Threat type: ${types}. Do NOT visit this URL.</p></div></div>`;
-                } else if (trickCount >= 2) {
-                    repDiv.innerHTML = `<div class="rep-banner rep-warn">
+    } else if (trickCount >= 2) {
+      repDiv.innerHTML = `<div class="rep-banner rep-warn">
         <span class="rep-icon">⚠️</span>
         <div><strong>Not in blacklist, but suspicious patterns detected</strong>
         <p>${trickCount} trick(s) found in the URL structure. Proceed with extreme caution.</p></div></div>`;
-                } else if (trickCount === 1) {
-                    repDiv.innerHTML = `<div class="rep-banner rep-warn">
+    } else if (trickCount === 1) {
+      repDiv.innerHTML = `<div class="rep-banner rep-warn">
         <span class="rep-icon">⚠️</span>
         <div><strong>Not flagged, but 1 suspicious pattern detected</strong>
         <p>Review the URL breakdown above carefully before visiting.</p></div></div>`;
-                } else {
-                    repDiv.innerHTML = `<div class="rep-banner rep-safe">
+    } else {
+      repDiv.innerHTML = `<div class="rep-banner rep-safe">
         <span class="rep-icon">✓</span>
         <div><strong>No threats detected</strong>
         <p>Not in Google's blacklist and no suspicious patterns found. Still verify before visiting.</p></div></div>`;
-                }
-            } catch (e) {
-                // API failed — fall back to local analysis only
-                if (trickCount >= 1) {
-                    repDiv.innerHTML = `<div class="rep-banner rep-warn">
+    }
+  } catch(e) {
+    // API failed — fall back to local analysis only
+    if (trickCount >= 1) {
+      repDiv.innerHTML = `<div class="rep-banner rep-warn">
         <span class="rep-icon">⚠️</span>
         <div><strong>Could not reach Safe Browsing API</strong>
         <p>${trickCount} suspicious pattern(s) detected locally. Proceed with caution.</p></div></div>`;
-                } else {
-                    repDiv.innerHTML = `<div class="rep-banner rep-loading">
+    } else {
+      repDiv.innerHTML = `<div class="rep-banner rep-loading">
         <span class="rep-icon">ℹ</span>
         <div><strong>Reputation check unavailable (offline?)</strong>
         <p>No local suspicious patterns found. Manually verify before visiting.</p></div></div>`;
-                }
-            }
-        }
+    }
+  }
+}
 
-        function resetResult() {
-            document.getElementById('result-card').style.display = 'none';
-            document.getElementById('scan-again-wrap').style.display = 'none';
-            currentContent = '';
-            setStatus(false, 'Ready — choose camera or upload an image');
-        }
+function resetResult() {
+  document.getElementById('result-card').style.display = 'none';
+  document.getElementById('scan-again-wrap').style.display = 'none';
+  currentContent = '';
+  setStatus(false, 'Ready — choose camera or upload an image');
+}
 
-        function copyContent() {
-            if (!currentContent) return;
-            copyText(currentContent);
-        }
+function copyContent() {
+  if (!currentContent) return;
+  copyText(currentContent);
+}
 
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2000);
-        }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
 
-        function setStatus(active, msg) {
-            document.getElementById('pulse-dot').className = 'pulse-dot' + (active ? ' active' : '');
-            document.getElementById('status-text').textContent = msg;
-        }
-    </script>
+function setStatus(active, msg) {
+  document.getElementById('pulse-dot').className = 'pulse-dot' + (active ? ' active' : '');
+  document.getElementById('status-text').textContent = msg;
+}
+</script>
 </body>
-
 </html>
