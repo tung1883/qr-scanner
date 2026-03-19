@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safe QR Scanner</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+    <title>SafeScan — QR Decoder</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230a0a0f'/><rect x='4' y='4' width='10' height='10' rx='1.5' fill='none' stroke='%2300ff88' stroke-width='2'/><rect x='6' y='6' width='6' height='6' rx='.5' fill='%2300ff88'/><rect x='18' y='4' width='10' height='10' rx='1.5' fill='none' stroke='%2300ff88' stroke-width='2'/><rect x='20' y='6' width='6' height='6' rx='.5' fill='%2300ff88'/><rect x='4' y='18' width='10' height='10' rx='1.5' fill='none' stroke='%2300ff88' stroke-width='2'/><rect x='6' y='20' width='6' height='6' rx='.5' fill='%2300ff88'/><rect x='18' y='18' width='4' height='4' rx='.5' fill='%2300ff88'/><rect x='24' y='18' width='4' height='4' rx='.5' fill='%2300ff88'/><rect x='18' y='24' width='4' height='4' rx='.5' fill='%2300ff88'/><rect x='24' y='24' width='4' height='4' rx='.5' fill='%2300ff88'/></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap');
 
@@ -78,11 +81,28 @@
             opacity: 0.8;
         }
 
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .logo-name {
+            font-family: 'Space Mono', monospace;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
         h1 {
-            font-size: clamp(28px, 6vw, 42px);
-            font-weight: 800;
+            font-size: clamp(26px, 6vw, 40px);
+            font-weight: 400;
             line-height: 1.05;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
         }
 
         h1 span {
@@ -603,12 +623,69 @@
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
+
+        /* Quick-copy bank cards */
+        .quick-card {
+            flex: 1;
+            min-width: 140px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: all 0.18s;
+            text-align: left;
+        }
+
+        .quick-card:hover {
+            border-color: var(--accent);
+            background: rgba(0, 255, 136, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .quick-card .qc-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 5px;
+        }
+
+        .quick-card .qc-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent);
+            word-break: break-all;
+        }
+
+        .quick-card .qc-hint {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <header>
+            <div class="logo-wrap">
+                <svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="11" height="11" rx="2" stroke="#00ff88" stroke-width="2" />
+                    <rect x="5" y="5" width="5" height="5" rx="0.5" fill="#00ff88" />
+                    <rect x="19" y="2" width="11" height="11" rx="2" stroke="#00ff88" stroke-width="2" />
+                    <rect x="22" y="5" width="5" height="5" rx="0.5" fill="#00ff88" />
+                    <rect x="2" y="19" width="11" height="11" rx="2" stroke="#00ff88" stroke-width="2" />
+                    <rect x="5" y="22" width="5" height="5" rx="0.5" fill="#00ff88" />
+                    <rect x="19" y="19" width="5" height="5" rx="0.5" fill="#00ff88" />
+                    <rect x="26" y="19" width="5" height="5" rx="0.5" fill="#00ff88" />
+                    <rect x="19" y="26" width="5" height="5" rx="0.5" fill="#00ff88" />
+                    <rect x="26" y="26" width="5" height="5" rx="0.5" fill="#00ff88" />
+                </svg>
+                <span class="logo-name">SafeScan</span>
+            </div>
             <div class="badge">Safe Mode Active</div>
             <h1>QR <span>Decoder</span></h1>
             <p class="subtitle">// read first. act later. stay safe.</p>
@@ -675,8 +752,10 @@
 
                 <div class="content-box" id="raw-content"></div>
 
+                <div id="bank-quick-copy" style="display:none; gap:10px; margin-bottom:14px; flex-wrap:wrap;"></div>
+
                 <div class="action-row">
-                    <button class="btn btn-primary" onclick="copyContent()">Copy Content</button>
+                    <button class="btn btn-primary" onclick="copyContent()">Copy Raw Content</button>
                     <button class="btn btn-ghost" onclick="resetResult()">Clear</button>
                 </div>
             </div>
@@ -700,6 +779,15 @@
         let animFrame = null;
         let currentContent = '';
 
+        // ── Check jsQR loaded ────────────────────────────────────────────────────────
+        function checkJsQR() {
+            if (typeof jsQR === 'undefined') {
+                setStatus(false, '⚠ jsQR library failed to load — check your internet connection and reload');
+                return false;
+            }
+            return true;
+        }
+
         // ── Tab switch ──────────────────────────────────────────────────────────────
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', (i === 0) === (tab === 'camera')));
@@ -711,6 +799,7 @@
         // ── Camera ──────────────────────────────────────────────────────────────────
         async function toggleCamera() {
             if (scanning) { stopCamera(); return; }
+            if (!checkJsQR()) return;
             const btn = document.getElementById('cam-btn');
             btn.textContent = 'Starting...';
             btn.disabled = true;
@@ -768,6 +857,7 @@
 
         // ── File upload ──────────────────────────────────────────────────────────────
         function handleFileUpload(e) {
+            if (!checkJsQR()) return;
             const file = e.target.files[0];
             if (!file) return;
             setStatus(true, `Decoding ${file.name}…`);
@@ -804,7 +894,117 @@
             if (file) handleFileUpload({ target: { files: [file], value: '' } });
         });
 
-        // ── Parse & display ──────────────────────────────────────────────────────────
+        // ── EMVCo TLV parser ─────────────────────────────────────────────────────────
+        function emvParse(str) {
+            const fields = {};
+            let i = 0;
+            while (i < str.length - 4) {
+                const id = str.slice(i, i + 2);
+                const len = parseInt(str.slice(i + 2, i + 4), 10);
+                if (isNaN(len)) break;
+                const val = str.slice(i + 4, i + 4 + len);
+                fields[id] = val;
+                i += 4 + len;
+            }
+            return fields;
+        }
+
+        function emvSubParse(val) {
+            return emvParse(val);
+        }
+
+        // VietQR bank BIN → name map
+        const VN_BANKS = {
+            '970436': 'Vietcombank', '970415': 'Vietinbank', '970418': 'BIDV',
+            '970422': 'MB Bank', '970432': 'VPBank', '970423': 'TPBank',
+            '970407': 'Techcombank', '970416': 'ACB', '970403': 'Sacombank',
+            '970433': 'VietBank', '970448': 'OCB', '970439': 'PVcomBank',
+            '970443': 'SHB', '970454': 'Shinhan Bank', '970412': 'Pvcombank',
+            '970414': 'OceanBank', '970440': 'SeABank', '970441': 'VIB',
+            '970437': 'HDBank', '970449': 'LPBank', '970417': 'Agribank',
+            '422589': 'Citibank VN', '796500': 'Standard Chartered VN',
+            '970425': 'ABBank', '970427': 'VietABank', '970429': 'SCB',
+            '970444': 'CBBank', '970446': 'Kienlongbank', '970452': 'KBank',
+            '668888': 'Woori Bank', '970457': 'Cake by VPBank', '970458': 'TNEX',
+            '970460': 'BVBank', '970462': 'Nam A Bank', '963388': 'HSBC VN',
+        };
+
+        function parseVietQR(data) {
+            const top = emvParse(data);
+            const result = [];
+
+            // Format indicator
+            if (top['00']) result.push({ label: 'Format', value: top['00'] === '01' ? 'EMVCo QRCPS-MPM' : top['00'] });
+
+            // Point of initiation
+            if (top['01']) result.push({ label: 'Type', value: top['01'] === '11' ? 'Static (reusable)' : top['01'] === '12' ? 'Dynamic (one-time)' : top['01'] });
+
+            // Merchant account info (IDs 26–51)
+            for (let id = 26; id <= 51; id++) {
+                const key = id.toString().padStart(2, '0');
+                if (!top[key]) continue;
+                const sub = emvSubParse(top[key]);
+                const guid = sub['00'] || '';
+
+                if (guid.includes('A000000727')) {
+                    // VietQR / NAPAS — sub['01'] is nested TLV: 00<BIN> 01<accountNo>
+                    result.push({ label: '🏦 Payment network', value: 'VietQR (NAPAS)', highlight: true });
+                    if (sub['01']) {
+                        const inner = emvParse(sub['01']);
+                        const bankBin = inner['00'] || '';
+                        const accountNo = inner['01'] || '';
+                        if (bankBin) {
+                            result.push({ label: 'Bank', value: VN_BANKS[bankBin] || ('Unknown (BIN: ' + bankBin + ')') });
+                            result.push({ label: 'Bank BIN', value: bankBin });
+                        }
+                        if (accountNo) result.push({ label: '💳 Account number', value: accountNo, highlight: true, copyable: true });
+                    }
+                    if (sub['02']) result.push({ label: 'Service code', value: sub['02'] === 'QRIBFTTA' ? 'QRIBFTTA (Transfer)' : sub['02'] });
+                } else if (guid) {
+                    result.push({ label: `Merchant account (${key})`, value: guid });
+                    Object.entries(sub).filter(([k]) => k !== '00').forEach(([k, v]) => {
+                        result.push({ label: `  └ Field ${k}`, value: v });
+                    });
+                }
+            }
+
+            // Currency
+            if (top['53']) {
+                const currencies = { '704': 'VND', '840': 'USD', '978': 'EUR', '826': 'GBP', '392': 'JPY', '156': 'CNY', '410': 'KRW' };
+                result.push({ label: 'Currency', value: currencies[top['53']] || top['53'] });
+            }
+
+            // Amount
+            if (top['54']) result.push({ label: '💰 Amount', value: Number(top['54']).toLocaleString('vi-VN') + (top['53'] === '704' ? ' ₫' : ''), highlight: true });
+
+            // Country
+            if (top['58']) result.push({ label: 'Country', value: top['58'] === 'VN' ? '🇻🇳 Vietnam' : top['58'] });
+
+            // Merchant name
+            if (top['59']) result.push({ label: '👤 Recipient name', value: top['59'], highlight: true });
+
+            // Merchant city
+            if (top['60']) result.push({ label: 'City', value: top['60'] });
+
+            // Postal code
+            if (top['61']) result.push({ label: 'Postal code', value: top['61'] });
+
+            // Additional data
+            if (top['62']) {
+                const sub = emvSubParse(top['62']);
+                if (sub['01']) result.push({ label: '📝 Transfer message', value: sub['01'], highlight: true });
+                if (sub['05']) result.push({ label: 'Reference', value: sub['05'] });
+                if (sub['07']) result.push({ label: 'Terminal ID', value: sub['07'] });
+                if (sub['08']) result.push({ label: 'Purpose', value: sub['08'] });
+            }
+
+            // CRC
+            if (top['63']) result.push({ label: 'CRC checksum', value: top['63'] });
+
+            return result.length > 0 ? result : null;
+        }
+
+        // ── Generic type detect ───────────────────────────────────────────────────────
         function detectType(data) {
             if (/^https?:\/\//i.test(data)) return 'url';
             if (/^WIFI:/i.test(data)) return 'wifi';
@@ -813,6 +1013,8 @@
             if (/^BEGIN:VCARD/i.test(data)) return 'vcard';
             if (/^SMSTO:/i.test(data)) return 'sms';
             if (/^geo:/i.test(data)) return 'location';
+            // EMVCo: starts with "000201"
+            if (/^000201/.test(data)) return 'emvco';
             return 'text';
         }
 
@@ -835,30 +1037,76 @@
             const urlWarn = document.getElementById('url-warning');
             const parsedDiv = document.getElementById('parsed-fields');
 
-            // Type badge
-            const labels = { url: 'URL', wifi: 'Wi-Fi', phone: 'Phone', email: 'Email', vcard: 'Contact', sms: 'SMS', location: 'Location', text: 'Text' };
-            badge.textContent = labels[type] || 'TEXT';
-            badge.className = `result-type-badge type-${type === 'vcard' || type === 'sms' || type === 'location' ? 'text' : type}`;
+            const typeLabels = { url: 'URL', wifi: 'Wi-Fi', phone: 'Phone', email: 'Email', vcard: 'Contact', sms: 'SMS', location: 'Location', emvco: 'VietQR / Bank', text: 'Text' };
+            badge.textContent = typeLabels[type] || 'TEXT';
+            badge.className = `result-type-badge type-${['vcard', 'sms', 'location', 'emvco'].includes(type) ? 'text' : type}`;
+            if (type === 'emvco') badge.className = 'result-type-badge type-wifi';
 
-            // URL warning
             urlWarn.style.display = type === 'url' ? 'flex' : 'none';
 
-            // Parsed fields for WIFI
             parsedDiv.innerHTML = '';
-            if (type === 'wifi') {
+
+            let fields = null;
+            if (type === 'wifi') fields = parseWifi(data);
+            else if (type === 'emvco') fields = parseVietQR(data);
+
+            if (fields && fields.length) {
                 parsedDiv.style.display = 'block';
-                parseWifi(data).forEach(f => {
-                    parsedDiv.innerHTML += `<div class="field-row"><span class="field-label">${f.label}</span><span class="field-value">${f.value}</span></div>`;
+                fields.forEach(f => {
+                    const hl = f.highlight ? 'style="color:var(--accent);font-weight:700"' : '';
+                    const copyBtn = f.copyable
+                        ? `<button onclick="copyText('${f.value.replace(/'/g, "\\'")}'); event.stopPropagation()" style="margin-left:8px;padding:2px 8px;font-size:10px;font-family:var(--font-mono);background:transparent;border:1px solid var(--muted);border-radius:4px;color:var(--muted);cursor:pointer">copy</button>`
+                        : '';
+                    parsedDiv.innerHTML += `<div class="field-row"><span class="field-label">${f.label}</span><span class="field-value" ${hl}>${f.value}${copyBtn}</span></div>`;
                 });
             } else {
                 parsedDiv.style.display = 'none';
             }
 
             rawBox.textContent = data;
+
+            // Bank quick-copy cards
+            const bankQuick = document.getElementById('bank-quick-copy');
+            bankQuick.innerHTML = '';
+            if (type === 'emvco' && fields) {
+                const bankField = fields.find(f => f.label === 'Bank');
+                const accountField = fields.find(f => f.label === '💳 Account number');
+                if (bankField || accountField) {
+                    bankQuick.style.display = 'flex';
+                    if (bankField) {
+                        bankQuick.innerHTML += `<button class="quick-card" onclick="copyText('${bankField.value.replace(/'/g, "\'")}')">
+          <div class="qc-label">🏦 Bank</div>
+          <div class="qc-value">${bankField.value}</div>
+          <div class="qc-hint">tap to copy</div>
+        </button>`;
+                    }
+                    if (accountField) {
+                        bankQuick.innerHTML += `<button class="quick-card" onclick="copyText('${accountField.value.replace(/'/g, "\'")}')">
+          <div class="qc-label">💳 Account number</div>
+          <div class="qc-value">${accountField.value}</div>
+          <div class="qc-hint">tap to copy</div>
+        </button>`;
+                    }
+                } else {
+                    bankQuick.style.display = 'none';
+                }
+            } else {
+                bankQuick.style.display = 'none';
+            }
+
             card.style.display = 'block';
             document.getElementById('scan-again-wrap').style.display = 'block';
             setStatus(false, '✓ QR code decoded successfully');
             card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = text; document.body.appendChild(ta); ta.select();
+                document.execCommand('copy'); document.body.removeChild(ta);
+                showToast('Copied!');
+            });
         }
 
         function resetResult() {
@@ -870,15 +1118,7 @@
 
         function copyContent() {
             if (!currentContent) return;
-            navigator.clipboard.writeText(currentContent).then(() => showToast('Copied!')).catch(() => {
-                // fallback
-                const ta = document.createElement('textarea');
-                ta.value = currentContent;
-                document.body.appendChild(ta);
-                ta.select(); document.execCommand('copy');
-                document.body.removeChild(ta);
-                showToast('Copied!');
-            });
+            copyText(currentContent);
         }
 
         function showToast(msg) {
